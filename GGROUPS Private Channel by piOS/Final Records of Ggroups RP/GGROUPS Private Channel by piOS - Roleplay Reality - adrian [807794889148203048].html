@@ -1,0 +1,5082 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>GGROUPS Private Channel by piOS - adrian</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <style>
+        /* General */
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-300.woff);
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-400.woff);
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-500.woff);
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-600.woff);
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-700.woff);
+    font-weight: 700;
+}
+
+body {
+    font-family: "Whitney", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 17px;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+img {
+    object-fit: contain;
+}
+
+.markdown {
+    max-width: 100%;
+    white-space: pre-wrap;
+    line-height: 1.3;
+    overflow-wrap: break-word;
+}
+
+.spoiler {
+    width: fit-content;
+}
+
+.spoiler--hidden {
+    cursor: pointer;
+}
+
+.spoiler-text {
+    border-radius: 3px;
+}
+
+.spoiler--hidden .spoiler-text {
+    color: rgba(0, 0, 0, 0);
+}
+
+.spoiler--hidden .spoiler-text::selection {
+    color: rgba(0, 0, 0, 0);
+}
+
+.spoiler-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: 3px;
+}
+
+.spoiler--hidden .spoiler-image {
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.spoiler--hidden .spoiler-image img {
+    filter: blur(44px);
+}
+
+.spoiler--hidden .spoiler-image:after {
+    content: "SPOILER";
+    color: #dcddde;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 600;
+    padding: 0.5em 0.7em;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    font-size: 0.9em;
+}
+
+.spoiler--hidden:hover .spoiler-image:after {
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.quote {
+    margin: 0.1em 0;
+    padding-left: 0.6em;
+    border-left: 4px solid;
+    border-radius: 3px;
+}
+
+.pre {
+    font-family: "Consolas", "Courier New", Courier, monospace;
+}
+
+.pre--multiline {
+    margin-top: 0.25em;
+    padding: 0.5em;
+    border: 2px solid;
+    border-radius: 5px;
+}
+
+.pre--inline {
+    padding: 2px;
+    border-radius: 3px;
+    font-size: 0.85em;
+}
+
+.mention {
+    border-radius: 3px;
+    padding: 0 2px;
+    color: #7289da;
+    background: rgba(114, 137, 218, .1);
+    font-weight: 500;
+}
+
+.emoji {
+    width: 1.25em;
+    height: 1.25em;
+    margin: 0 0.06em;
+    vertical-align: -0.4em;
+}
+
+.emoji--small {
+    width: 1em;
+    height: 1em;
+}
+
+.emoji--large {
+    width: 2.8em;
+    height: 2.8em;
+}
+
+/* Preamble */
+
+.preamble {
+    display: grid;
+    margin: 0 0.3em 0.6em 0.3em;
+    max-width: 100%;
+    grid-template-columns: auto 1fr;
+}
+
+.preamble__guild-icon-container {
+    grid-column: 1;
+}
+
+.preamble__guild-icon {
+    max-width: 88px;
+    max-height: 88px;
+}
+
+.preamble__entries-container {
+    grid-column: 2;
+    margin-left: 0.6em;
+}
+
+.preamble__entry {
+    font-size: 1.4em;
+}
+
+.preamble__entry--small {
+    font-size: 1em;
+}
+
+/* Chatlog */
+
+.chatlog {
+    max-width: 100%;
+}
+
+.chatlog__message-group {
+    display: grid;
+    margin: 0 0.6em;
+    padding: 0.9em 0;
+    border-top: 1px solid;
+    grid-template-columns: auto 1fr;
+}
+
+.chatlog__author-avatar-container {
+    grid-column: 1;
+    width: 40px;
+    height: 40px;
+}
+
+.chatlog__author-avatar {
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+}
+
+.chatlog__messages {
+    grid-column: 2;
+    margin-left: 1.2em;
+    min-width: 50%;
+}
+
+.chatlog__author-name {
+    font-weight: 500;
+}
+
+.chatlog__timestamp {
+    margin-left: 0.3em;
+    font-size: 0.75em;
+}
+
+.chatlog__message {
+    padding: 0.1em 0.3em;
+    margin: 0 -0.3em;
+    background-color: transparent;
+    transition: background-color 1s ease;
+}
+
+.chatlog__content {
+    font-size: 0.95em;
+    word-wrap: break-word;
+}
+
+.chatlog__edited-timestamp {
+    margin-left: 0.15em;
+    font-size: 0.8em;
+}
+
+.chatlog__attachment {
+    margin-top: 0.3em;
+}
+
+.chatlog__attachment-thumbnail {
+    vertical-align: top;
+    max-width: 45vw;
+    max-height: 500px;
+    border-radius: 3px;
+}
+
+.chatlog__embed {
+    display: flex;
+    margin-top: 0.3em;
+    max-width: 520px;
+}
+
+.chatlog__embed-color-pill {
+    flex-shrink: 0;
+    width: 0.25em;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.chatlog__embed-content-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5em 0.6em;
+    border: 1px solid;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.chatlog__embed-content {
+    display: flex;
+    width: 100%;
+}
+
+.chatlog__embed-text {
+    flex: 1;
+}
+
+.chatlog__embed-author {
+    display: flex;
+    margin-bottom: 0.3em;
+    align-items: center;
+}
+
+.chatlog__embed-author-icon {
+    margin-right: 0.5em;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.chatlog__embed-author-name {
+    font-size: 0.875em;
+    font-weight: 600;
+}
+
+.chatlog__embed-title {
+    margin-bottom: 0.2em;
+    font-size: 0.875em;
+    font-weight: 600;
+}
+
+.chatlog__embed-description {
+    font-weight: 500;
+    font-size: 0.85em;
+}
+
+.chatlog__embed-fields {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.chatlog__embed-field {
+    flex: 0;
+    min-width: 100%;
+    max-width: 506px;
+    padding-top: 0.6em;
+    font-size: 0.875em;
+}
+
+.chatlog__embed-field--inline {
+    flex: 1;
+    flex-basis: auto;
+    min-width: 150px;
+}
+
+.chatlog__embed-field-name {
+    margin-bottom: 0.2em;
+    font-weight: 600;
+}
+
+.chatlog__embed-field-value {
+    font-weight: 500;
+}
+
+.chatlog__embed-thumbnail {
+    flex: 0;
+    margin-left: 1.2em;
+    max-width: 80px;
+    max-height: 80px;
+    border-radius: 3px;
+}
+
+.chatlog__embed-image-container {
+    margin-top: 0.6em;
+}
+
+.chatlog__embed-image {
+    max-width: 500px;
+    max-height: 400px;
+    border-radius: 3px;
+}
+
+.chatlog__embed-footer {
+    margin-top: 0.6em;
+}
+
+.chatlog__embed-footer-icon {
+    margin-right: 0.2em;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+.chatlog__embed-footer-text {
+    font-size: 0.75em;
+    font-weight: 500;
+}
+
+.chatlog__reactions {
+    display: flex;
+}
+
+.chatlog__reaction {
+    display: flex;
+    align-items: center;
+    margin: 0.35em 0.1em 0.1em 0.1em;
+    padding: 0.2em 0.35em;
+    border-radius: 3px;
+}
+
+.chatlog__reaction-count {
+    min-width: 9px;
+    margin-left: 0.35em;
+    font-size: 0.875em;
+}
+
+.chatlog__bot-tag {
+    position: relative;
+    top: -.2em;
+    margin-left: 0.3em;
+    padding: 0.05em 0.3em;
+    border-radius: 3px;
+    vertical-align: middle;
+    line-height: 1.3;
+    background: #7289da;
+    color: #ffffff;
+    font-size: 0.625em;
+    font-weight: 500;
+}
+
+/* Postamble */
+
+.postamble {
+    margin: 1.4em 0.3em 0.6em 0.3em;
+    padding: 1em;
+    border-top: 1px solid;
+}
+    </style>
+    <style>
+        /* General */
+
+body {
+    background-color: #36393e;
+    color: #dcddde;
+}
+
+a {
+    color: #0096cf;
+}
+
+.spoiler-text {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.spoiler--hidden .spoiler-text {
+    background-color: #202225;
+}
+
+.spoiler--hidden:hover .spoiler-text {
+    background-color: rgba(32, 34, 37, 0.8);
+}
+
+.quote {
+    border-color: #4f545c;
+}
+
+.pre {
+    background-color: #2f3136 !important;
+}
+
+.pre--multiline {
+    border-color: #282b30 !important;
+    color: #b9bbbe !important;
+}
+
+/* === Preamble === */
+
+.preamble__entry {
+    color: #ffffff;
+}
+
+/* Chatlog */
+
+.chatlog__message-group {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.chatlog__author-name {
+    color: #ffffff;
+}
+
+.chatlog__timestamp {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.chatlog__message--highlighted {
+    background-color: rgba(114, 137, 218, 0.2) !important;
+}
+
+.chatlog__message--pinned {
+    background-color: rgba(249, 168, 37, 0.05);
+}
+
+.chatlog__edited-timestamp {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.chatlog__embed-color-pill--default {
+    background-color: rgba(79, 84, 92, 1);
+}
+
+.chatlog__embed-content-container {
+    background-color: rgba(46, 48, 54, 0.3);
+    border-color: rgba(46, 48, 54, 0.6);
+}
+
+.chatlog__embed-author-name {
+    color: #ffffff;
+}
+
+.chatlog__embed-author-name-link {
+    color: #ffffff;
+}
+
+.chatlog__embed-title {
+    color: #ffffff;
+}
+
+.chatlog__embed-description {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chatlog__embed-field-name {
+    color: #ffffff;
+}
+
+.chatlog__embed-field-value {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chatlog__embed-footer {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chatlog__reaction {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.chatlog__reaction-count {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Postamble */
+
+.postamble {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.postamble__entry {
+    color: #ffffff;
+}
+    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.pre--multiline').forEach(block => hljs.highlightBlock(block));
+        });
+    </script>
+
+    <script>
+        function scrollToMessage(event, id) {
+            var element = document.getElementById('message-' + id);
+
+            if (element) {
+                event.preventDefault();
+
+                element.classList.add('chatlog__message--highlighted');
+
+                window.scrollTo({
+                    top: element.getBoundingClientRect().top - document.body.getBoundingClientRect().top - (window.innerHeight / 2),
+                    behavior: 'smooth'
+                });
+
+                window.setTimeout(function() {
+                    element.classList.remove('chatlog__message--highlighted');
+                }, 2000);
+            }
+        }
+
+        function showSpoiler(event, element) {
+            if (element && element.classList.contains('spoiler--hidden')) {
+                event.preventDefault();
+                element.classList.remove('spoiler--hidden');
+            }
+        }
+    </script>
+</head>
+<body>
+
+<div class="preamble">
+    <div class="preamble__guild-icon-container">
+        <img class="preamble__guild-icon" src="https://cdn.discordapp.com/icons/793203674625212466/ce7ac2e697f072189575a2bb751f2d86.png" alt="Guild icon">
+    </div>
+    <div class="preamble__entries-container">
+        <div class="preamble__entry">GGROUPS Private Channel by piOS</div>
+        <div class="preamble__entry">Roleplay Reality / adrian</div>
+
+            <div class="preamble__entry preamble__entry--small">&lt;@532682769462067222&gt;&#39;s in-RP reality.</div>
+
+    </div>
+</div>
+
+<div class="chatlog">
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">10-Feb-21 01:04 AM</span>
+
+            <div class="chatlog__message " data-message-id="808941384522268674" id="message-808941384522268674">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I&#39;m startled awake by an alarm</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="808941874483036180" id="message-808941874483036180">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I fell asleep at my desk again, I have a bed for a reason</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="808942119099957270" id="message-808942119099957270">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>Stretching, I look towards my computer. A How it&#39;s Made video plays on one screen, with an incomplete essay shown on the other.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="808942289031790642" id="message-808942289031790642">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I get up and grab a sweatshirt. I need something to get me going, so I head downstairs and out the door.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="808942455491657748" id="message-808942455491657748">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>It&#39;s a moderately sunny morning, with a few clouds here and there.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="808942813811048459" id="message-808942813811048459">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I reach my destination, a local coffee shop</em>
+&quot;Morning Adrian!&quot; <em>The barista says cheerfully.</em> &quot;The usual, right?&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="808943040575176714" id="message-808943040575176714">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I shake my head and head for a seat. I knock down a salt shaker in the process</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="808943693426851840" id="message-808943693426851840">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I check social media. More political bs, and a new event in a BR game. Same old, same old.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="808943923955367936" id="message-808943923955367936">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Late night?&quot; <em>The waiter delivers my coffee.</em>
+&quot;Yeah... I gotta do something about my schedule...&quot; <em>I respond, mid yawn</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">10-Feb-21 01:22 AM</span>
+
+            <div class="chatlog__message " data-message-id="808945941763326002" id="message-808945941763326002">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I finish my coffee and head back to my apartment. The city isn&#39;t too active this time of day, which is nice.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="808946182914965504" id="message-808946182914965504">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>When I reach my room, I lay on the couch and turn on the TV and begin playing video games.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">19-Feb-21 01:06 AM</span>
+
+            <div class="chatlog__message " data-message-id="812203560695234560" id="message-812203560695234560">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I pause my game and turn on the news.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812203639216799785" id="message-812203639216799785">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Boring, boring...&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812203700755365898" id="message-812203700755365898">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Alternate timelines? Interesting...&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812204313014566932" id="message-812204313014566932">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;...&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812204394761420830" id="message-812204394761420830">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Well I&#39;d be wrong if I said I was expecting that to happen.&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812205145373802497" id="message-812205145373802497">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;...I wonder if they know the commercial break is over.&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812205624522965033" id="message-812205624522965033">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;That was one hell of an event.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">19-Feb-21 01:31 AM</span>
+
+            <div class="chatlog__message " data-message-id="812209651701121074" id="message-812209651701121074">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>The tv channel changes on it&#39;s own to show two blokes talking in front of a camera</em>
+&quot;Who are these blokes, and why does one of them look like me?&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812210006715138078" id="message-812210006715138078">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Uhhhh&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812210047361876010" id="message-812210047361876010">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Hi? Why do you know my name?&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812210922663182337" id="message-812210922663182337">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Ok, this is getting ridiculous, back to A Hat in Time.&quot;
+<em>I switch the input back to the connected PC and resume my game.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">19-Feb-21 01:36 AM</span>
+
+            <div class="chatlog__message " data-message-id="812211064329994281" id="message-812211064329994281">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>The tv switches back to God News.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812211156601143296" id="message-812211156601143296">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I crawl through the screen.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812211177677520917" id="message-812211177677520917">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Hi.&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812211451761786900" id="message-812211451761786900">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;This is what happens when a god takes a joke too far, in case you didn&#39;t realize.&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812211764703133706" id="message-812211764703133706">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Oh god he is speechless.&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812211798379200532" id="message-812211798379200532">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Uh.&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812211854721024010" id="message-812211854721024010">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Here have some almond water.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">19-Feb-21 01:39 AM</span>
+
+            <div class="chatlog__message " data-message-id="812211854947516417" id="message-812211854947516417">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;HOW THE FUCK&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812211886900248606" id="message-812211886900248606">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Thanks?&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">19-Feb-21 01:40 AM</span>
+
+            <div class="chatlog__message " data-message-id="812211900082814988" id="message-812211900082814988">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;I told you im god.&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812211933356490792" id="message-812211933356490792">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Well, A god.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">19-Feb-21 01:40 AM</span>
+
+            <div class="chatlog__message " data-message-id="812211949931593768" id="message-812211949931593768">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Can you get out of my house now?&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">19-Feb-21 01:40 AM</span>
+
+            <div class="chatlog__message " data-message-id="812212091627896842" id="message-812212091627896842">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;...&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812212133218877443" id="message-812212133218877443">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Yeah sure I&#39;m a pretty chill god.&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812212177032314900" id="message-812212177032314900">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I crawl back through the tv.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">19-Feb-21 01:41 AM</span>
+
+            <div class="chatlog__message " data-message-id="812212223274909696" id="message-812212223274909696">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I unplug the tv</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:07 PM</span>
+
+            <div class="chatlog__message " data-message-id="813200252836118529" id="message-813200252836118529">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>Yawning, I get up towards the door.</em>
+&quot;I could use something to eat...&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813200866046771200" id="message-813200866046771200">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>As I walk down the sidewalk, I accidentally bump into someone, causing them to drop a notebook they were carrying.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813201139042222160" id="message-813201139042222160">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Oh, I&#39;m so sorry about that... Here, let me...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:11 PM</span>
+
+            <div class="chatlog__message " data-message-id="813201196848119868" id="message-813201196848119868">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;It&#39;s all good, but I can get...&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813201365869658143" id="message-813201365869658143">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>The notebook was flipped open to a page with a drawing, making it completely in view of the other individual</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:12 PM</span>
+
+            <div class="chatlog__message " data-message-id="813201407481085972" id="message-813201407481085972">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Hey, wait a minute...&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813201465598410823" id="message-813201465598410823">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;I recognize this figure...&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813201887200804885" id="message-813201887200804885">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Would you mind coming with me to the coffee shop? I have a few questions, and I don&#39;t think out in the open would be the best place to ask them.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:15 PM</span>
+
+            <div class="chatlog__message " data-message-id="813202259432439858" id="message-813202259432439858">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I hesitate, and snatch the notebook back. Going with them isn&#39;t the greatest idea, so I decline.</em>
+&quot;Sorry, but I&#39;m actually running late for a meeting. Could I maybe get your number and then I can answer your questions later?&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:16 PM</span>
+
+            <div class="chatlog__message " data-message-id="813202445911064596" id="message-813202445911064596">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Wait.&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813202464479903796" id="message-813202464479903796">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Go with him.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:16 PM</span>
+
+            <div class="chatlog__message " data-message-id="813202482561024050" id="message-813202482561024050">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Sure, lemme just...&quot; 
+<em>I jot my number down on a piece of paper.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:16 PM</span>
+
+            <div class="chatlog__message " data-message-id="813202522331807795" id="message-813202522331807795">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Oliver.&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813202595895967794" id="message-813202595895967794">
+                <div class="chatlog__content">
+                    <div class="markdown">wait i forgot i dont use the &quot;s here lol </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:16 PM</span>
+
+            <div class="chatlog__message " data-message-id="813202621485678592" id="message-813202621485678592">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;A-actually, the meeting isn&#39;t all that important...&quot;
+<em>I shift nervously in place.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813202657819885608" id="message-813202657819885608">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Why don&#39;t we go to your place instead?&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:17 PM</span>
+
+            <div class="chatlog__message " data-message-id="813202868852883517" id="message-813202868852883517">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I notice the nervous shifting, and eye this individual suspiciously</em>
+&quot;Sure, we can go to my place, it&#39;s just up the road.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:18 PM</span>
+
+            <div class="chatlog__message " data-message-id="813203101800464384" id="message-813203101800464384">
+                <div class="chatlog__content">
+                    <div class="markdown">fuck </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813203130555826176" id="message-813203130555826176">
+                <div class="chatlog__content">
+                    <div class="markdown">uh let me try something </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813203141058101249" id="message-813203141058101249">
+                <div class="chatlog__content">
+                    <div class="markdown">Adrian? </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:19 PM</span>
+
+            <div class="chatlog__message " data-message-id="813203174575308811" id="message-813203174575308811">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I lead the person up the road.</em>
+&quot;Say, I never got your na-&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813203194309115944" id="message-813203194309115944">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Who said that?&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:19 PM</span>
+
+            <div class="chatlog__message " data-message-id="813203206346637322" id="message-813203206346637322">
+                <div class="chatlog__content">
+                    <div class="markdown">uh me </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:19 PM</span>
+
+            <div class="chatlog__message " data-message-id="813203225493766186" id="message-813203225493766186">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Oh no...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:19 PM</span>
+
+            <div class="chatlog__message " data-message-id="813203226438533141" id="message-813203226438533141">
+                <div class="chatlog__content">
+                    <div class="markdown">let me explain </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813203268402282517" id="message-813203268402282517">
+                <div class="chatlog__content">
+                    <div class="markdown">i am one of the creators of this world </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813203350190424094" id="message-813203350190424094">
+                <div class="chatlog__content">
+                    <div class="markdown">the reason he seems so nervous is because i told him to go with you </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:19 PM</span>
+
+            <div class="chatlog__message " data-message-id="813203368871723038" id="message-813203368871723038">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Now really isn&#39;t the best time.&quot; <em>I say, rolling my eyes.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:20 PM</span>
+
+            <div class="chatlog__message " data-message-id="813203433305800734" id="message-813203433305800734">
+                <div class="chatlog__content">
+                    <div class="markdown">also yes i was the god dude on the tv show that was embarrassing im sorry </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813203488208715807" id="message-813203488208715807">
+                <div class="chatlog__content">
+                    <div class="markdown">Not calling myself a god again cause I now realize how egotistical that makes me sound despite it being a coping mechanism that makes me feel in control I NEED TO STOP TALKING. </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:20 PM</span>
+
+            <div class="chatlog__message " data-message-id="813203541882961960" id="message-813203541882961960">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;I mean, I wasn&#39;t really thinking otherwise of it, I am a complete stranger to him.&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813203602502844437" id="message-813203602502844437">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Come on, it&#39;s right this way.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:20 PM</span>
+
+            <div class="chatlog__message " data-message-id="813203622371786774" id="message-813203622371786774">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Coming!&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/252476454267387905/380a5478bac7e6b40bdbf1bf4cc59db5.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ramen#4608" data-user-id="252476454267387905" style="color: rgb(155,89,182)">Ramen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:20 PM</span>
+
+            <div class="chatlog__message " data-message-id="813203638507012126" id="message-813203638507012126">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>Ramen looks on from above.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:21 PM</span>
+
+            <div class="chatlog__message " data-message-id="813203709064380417" id="message-813203709064380417">
+                <div class="chatlog__content">
+                    <div class="markdown">ramen how the FUCK </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813203713397096468" id="message-813203713397096468">
+                <div class="chatlog__content">
+                    <div class="markdown">ok </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813203717234229328" id="message-813203717234229328">
+                <div class="chatlog__content">
+                    <div class="markdown">look </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813203736381751347" id="message-813203736381751347">
+                <div class="chatlog__content">
+                    <div class="markdown">now is NOT the time ramen </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813203748486250538" id="message-813203748486250538">
+                <div class="chatlog__content">
+                    <div class="markdown">i see you up there </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:21 PM</span>
+
+            <div class="chatlog__message " data-message-id="813203759269412904" id="message-813203759269412904">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>We walk towards my house in silence. We probably didn&#39;t get off on the right foot back there...</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/252476454267387905/380a5478bac7e6b40bdbf1bf4cc59db5.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ramen#4608" data-user-id="252476454267387905" style="color: rgb(155,89,182)">Ramen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:21 PM</span>
+
+            <div class="chatlog__message " data-message-id="813203819139170324" id="message-813203819139170324">
+                <div class="chatlog__content">
+                    <div class="markdown">Well I&#39;m not the one VERBALLY TALKING TO THE CHARACTERS AND INFLUENCING THE STORY DIPSHIT </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:22 PM</span>
+
+            <div class="chatlog__message " data-message-id="813203987334430720" id="message-813203987334430720">
+                <div class="chatlog__content">
+                    <div class="markdown">the only reason oliver fucking exists is because of me talking to the characters ramen </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:22 PM</span>
+
+            <div class="chatlog__message " data-message-id="813204097783824395" id="message-813204097783824395">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>We make it back to their house, and I set the notebook down on the counter. We should probably take care of the introductions now...</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/252476454267387905/380a5478bac7e6b40bdbf1bf4cc59db5.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ramen#4608" data-user-id="252476454267387905" style="color: rgb(155,89,182)">Ramen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:23 PM</span>
+
+            <div class="chatlog__message " data-message-id="813204269582123080" id="message-813204269582123080">
+                <div class="chatlog__content">
+                    <div class="markdown">You&#39;re saying too much. Stop with this. We are only supposed to talk to the characters inbetween. </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:23 PM</span>
+
+            <div class="chatlog__message " data-message-id="813204313744474112" id="message-813204313744474112">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;You asked it before, and I didn&#39;t answer, but the name&#39;s Oliver. Oliver Cohen.&quot;
+<em>I extend my arm, with the intent of shaking theirs.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:23 PM</span>
+
+            <div class="chatlog__message " data-message-id="813204378026508288" id="message-813204378026508288">
+                <div class="chatlog__content">
+                    <div class="markdown">ramen... </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:23 PM</span>
+
+            <div class="chatlog__message " data-message-id="813204386016788522" id="message-813204386016788522">
+                <div class="chatlog__content">
+                    <div class="markdown">(I still gotta come up with a last name for my character...) </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:24 PM</span>
+
+            <div class="chatlog__message " data-message-id="813204435202736158" id="message-813204435202736158">
+                <div class="chatlog__content">
+                    <div class="markdown">i cant stop without breaking olivers character </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813204485845417995" id="message-813204485845417995">
+                <div class="chatlog__content">
+                    <div class="markdown">i am a voice in his head </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813204505667436554" id="message-813204505667436554">
+                <div class="chatlog__content">
+                    <div class="markdown">its a part of the story </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813204558213414922" id="message-813204558213414922">
+                <div class="chatlog__content">
+                    <div class="markdown">he cant hear me right now dont worry </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/252476454267387905/380a5478bac7e6b40bdbf1bf4cc59db5.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ramen#4608" data-user-id="252476454267387905" style="color: rgb(155,89,182)">Ramen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:24 PM</span>
+
+            <div class="chatlog__message " data-message-id="813204608372834314" id="message-813204608372834314">
+                <div class="chatlog__content">
+                    <div class="markdown">That&#39;s not very clear </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813204623829106689" id="message-813204623829106689">
+                <div class="chatlog__content">
+                    <div class="markdown">or certain </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:24 PM</span>
+
+            <div class="chatlog__message " data-message-id="813204651003346995" id="message-813204651003346995">
+                <div class="chatlog__content">
+                    <div class="markdown"><em><span class="pre pre--inline">Can you all shut up holy shit.</span></em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:25 PM</span>
+
+            <div class="chatlog__message " data-message-id="813204711326089237" id="message-813204711326089237">
+                <div class="chatlog__content">
+                    <div class="markdown">ramen just stay out of it </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813204740234018906" id="message-813204740234018906">
+                <div class="chatlog__content">
+                    <div class="markdown">can you do that for me </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/252476454267387905/380a5478bac7e6b40bdbf1bf4cc59db5.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ramen#4608" data-user-id="252476454267387905" style="color: rgb(155,89,182)">Ramen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:25 PM</span>
+
+            <div class="chatlog__message " data-message-id="813204776958558248" id="message-813204776958558248">
+                <div class="chatlog__content">
+                    <div class="markdown">Do not even </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813204804989091860" id="message-813204804989091860">
+                <div class="chatlog__content">
+                    <div class="markdown">I just came here to watch </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:25 PM</span>
+
+            <div class="chatlog__message " data-message-id="813204821158527046" id="message-813204821158527046">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Well, nice to meet you Oliver. The name&#39;s Adrian. Adrian East.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:25 PM</span>
+
+            <div class="chatlog__message " data-message-id="813204842025189396" id="message-813204842025189396">
+                <div class="chatlog__content">
+                    <div class="markdown">fine </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813204852007501824" id="message-813204852007501824">
+                <div class="chatlog__content">
+                    <div class="markdown">im sorry </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:25 PM</span>
+
+            <div class="chatlog__message " data-message-id="813204864418316328" id="message-813204864418316328">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;East? Like the direction?&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:25 PM</span>
+
+            <div class="chatlog__message " data-message-id="813204898371993630" id="message-813204898371993630">
+                <div class="chatlog__content">
+                    <div class="markdown">how funny oliver </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/252476454267387905/380a5478bac7e6b40bdbf1bf4cc59db5.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ramen#4608" data-user-id="252476454267387905" style="color: rgb(155,89,182)">Ramen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:25 PM</span>
+
+            <div class="chatlog__message " data-message-id="813204901308006480" id="message-813204901308006480">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>ba dum tss</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:26 PM</span>
+
+            <div class="chatlog__message " data-message-id="813204950665396235" id="message-813204950665396235">
+                <div class="chatlog__content">
+                    <div class="markdown">ok you can both hear me right? </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813204957737517096" id="message-813204957737517096">
+                <div class="chatlog__content">
+                    <div class="markdown">okay </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:26 PM</span>
+
+            <div class="chatlog__message " data-message-id="813204961403600936" id="message-813204961403600936">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Yeah... I get that a lot...&quot; <em>I shake Oliver&#39;s hand.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:26 PM</span>
+
+            <div class="chatlog__message " data-message-id="813205006928576532" id="message-813205006928576532">
+                <div class="chatlog__content">
+                    <div class="markdown">oliver show him the notebook i guess </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813205068387188807" id="message-813205068387188807">
+                <div class="chatlog__content">
+                    <div class="markdown">if you have any questions ask me adrian </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:26 PM</span>
+
+            <div class="chatlog__message " data-message-id="813205072065986601" id="message-813205072065986601">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;You know, I can&#39;t help but get the feeling that we&#39;re being watched...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:26 PM</span>
+
+            <div class="chatlog__message " data-message-id="813205099706318888" id="message-813205099706318888">
+                <div class="chatlog__content">
+                    <div class="markdown">other gods </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813205116131213374" id="message-813205116131213374">
+                <div class="chatlog__content">
+                    <div class="markdown">are watching you </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813205139963248670" id="message-813205139963248670">
+                <div class="chatlog__content">
+                    <div class="markdown">thats all i can say </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:27 PM</span>
+
+            <div class="chatlog__message " data-message-id="813205265150378007" id="message-813205265150378007">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Now then, would you mind showing me through this notebook of yours?&quot; <span class="chatlog__edited-timestamp" title="21-Feb-21 07:27 PM">(edited)</span></div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:27 PM</span>
+
+            <div class="chatlog__message " data-message-id="813205323804442636" id="message-813205323804442636">
+                <div class="chatlog__content">
+                    <div class="markdown">wait fuck did i forget to unmute </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813205330800279552" id="message-813205330800279552">
+                <div class="chatlog__content">
+                    <div class="markdown">shit </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813205361032822803" id="message-813205361032822803">
+                <div class="chatlog__content">
+                    <div class="markdown">k now </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813205372516958248" id="message-813205372516958248">
+                <div class="chatlog__content">
+                    <div class="markdown">can you hear me </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:28 PM</span>
+
+            <div class="chatlog__message " data-message-id="813205495463542884" id="message-813205495463542884">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;I suppose...&quot;
+<em>Shaking, I start going through the notebook, guiding Adrian through the events of a past timeline.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:28 PM</span>
+
+            <div class="chatlog__message " data-message-id="813205615253651477" id="message-813205615253651477">
+                <div class="chatlog__content">
+                    <div class="markdown">(can your characters not hear me or are they just ignoring me) </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:28 PM</span>
+
+            <div class="chatlog__message " data-message-id="813205646265810984" id="message-813205646265810984">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I do my best to follow along, but most of these things are a lot harder to understand than it seems...</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:29 PM</span>
+
+            <div class="chatlog__message " data-message-id="813205725156212736" id="message-813205725156212736">
+                <div class="chatlog__content">
+                    <div class="markdown">(They are too busy going through the notebook to notice you) </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813205870384513055" id="message-813205870384513055">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>After a while, we reach the characters and their bios. Impulse, Zeet, Chirp, Ramen.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/252476454267387905/380a5478bac7e6b40bdbf1bf4cc59db5.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ramen#4608" data-user-id="252476454267387905" style="color: rgb(155,89,182)">Ramen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:30 PM</span>
+
+            <div class="chatlog__message " data-message-id="813205933848526938" id="message-813205933848526938">
+                <div class="chatlog__content">
+                    <div class="markdown">(I gtg) </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:30 PM</span>
+
+            <div class="chatlog__message " data-message-id="813205950793777152" id="message-813205950793777152">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>Then, two drawings of Jonesy, with different bios.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:30 PM</span>
+
+            <div class="chatlog__message " data-message-id="813206006447734786" id="message-813206006447734786">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Two of them, eh? Odd...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:30 PM</span>
+
+            <div class="chatlog__message " data-message-id="813206018028208136" id="message-813206018028208136">
+                <div class="chatlog__content">
+                    <div class="markdown">i dont like being ignored, but i guess this is just the other person controlling the story&#39;s way to keep me out of the story </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813206110198431765" id="message-813206110198431765">
+                <div class="chatlog__content">
+                    <div class="markdown">fine, i&#39;ll be quiet </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:31 PM</span>
+
+            <div class="chatlog__message " data-message-id="813206212891639839" id="message-813206212891639839">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I notice the <span class="pre pre--inline">real names</span> part of the bios, with each one having a different name.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813206297092685844" id="message-813206297092685844">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>On the left is Adrian East, me.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813206382483603506" id="message-813206382483603506">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>And on the right is Oliver Cohen, the individual standing next to me.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813206410845487124" id="message-813206410845487124">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Wait a minute...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:32 PM</span>
+
+            <div class="chatlog__message " data-message-id="813206500121640972" id="message-813206500121640972">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I begin sweating. This was not the plan, I repeat, this was not the plan.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:32 PM</span>
+
+            <div class="chatlog__message " data-message-id="813206509814546452" id="message-813206509814546452">
+                <div class="chatlog__content">
+                    <div class="markdown">shit now i have to intervine </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813206519042146344" id="message-813206519042146344">
+                <div class="chatlog__content">
+                    <div class="markdown">HEY </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813206547676135444" id="message-813206547676135444">
+                <div class="chatlog__content">
+                    <div class="markdown">ADRIAN </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813206560040812564" id="message-813206560040812564">
+                <div class="chatlog__content">
+                    <div class="markdown">OLIVER </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:32 PM</span>
+
+            <div class="chatlog__message " data-message-id="813206576176300062" id="message-813206576176300062">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Something doesn&#39;t add-&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813206610053693461" id="message-813206610053693461">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;What do you want, jerk?&quot; <span class="chatlog__edited-timestamp" title="21-Feb-21 07:32 PM">(edited)</span></div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:33 PM</span>
+
+            <div class="chatlog__message " data-message-id="813206679512416297" id="message-813206679512416297">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I breath a sigh of relief.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:33 PM</span>
+
+            <div class="chatlog__message " data-message-id="813206722440331275" id="message-813206722440331275">
+                <div class="chatlog__content">
+                    <div class="markdown">ignoring that you just called me a jerk, oliver is YOU from an alternate timeline </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813206776878202910" id="message-813206776878202910">
+                <div class="chatlog__content">
+                    <div class="markdown">his timeline was destroyed, and his home was reset </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:33 PM</span>
+
+            <div class="chatlog__message " data-message-id="813206802485084200" id="message-813206802485084200">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Yeah, I noticed.&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813206849700364338" id="message-813206849700364338">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Wait, really?&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:33 PM</span>
+
+            <div class="chatlog__message " data-message-id="813206920952676372" id="message-813206920952676372">
+                <div class="chatlog__content">
+                    <div class="markdown">i allowed him to exist here as a different character, and placed a part of his personality in you </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:34 PM</span>
+
+            <div class="chatlog__message " data-message-id="813206939978563644" id="message-813206939978563644">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Maybe I&#39;m being a bit harsh with the scenarios right now...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:34 PM</span>
+
+            <div class="chatlog__message " data-message-id="813206940012380190" id="message-813206940012380190">
+                <div class="chatlog__content">
+                    <div class="markdown">no joke </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:34 PM</span>
+
+            <div class="chatlog__message " data-message-id="813207110413713459" id="message-813207110413713459">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;He speaks the truth. I wanted to tell you myself, but I couldn&#39;t fit it into the discussion...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:34 PM</span>
+
+            <div class="chatlog__message " data-message-id="813207148459982876" id="message-813207148459982876">
+                <div class="chatlog__content">
+                    <div class="markdown">also, just out of curiosity, why do you dislike me </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813207158056943686" id="message-813207158056943686">
+                <div class="chatlog__content">
+                    <div class="markdown">seriously </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813207185369595954" id="message-813207185369595954">
+                <div class="chatlog__content">
+                    <div class="markdown">be honest </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813207220933623838" id="message-813207220933623838">
+                <div class="chatlog__content">
+                    <div class="markdown">i wont kill you or anything </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:35 PM</span>
+
+            <div class="chatlog__message " data-message-id="813207326289821697" id="message-813207326289821697">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Sorry if what I said was rude, I was just about to put two and two together and you kinda interrupted me.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:36 PM</span>
+
+            <div class="chatlog__message " data-message-id="813207460529700904" id="message-813207460529700904">
+                <div class="chatlog__content">
+                    <div class="markdown">ah </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:36 PM</span>
+
+            <div class="chatlog__message " data-message-id="813207461774753842" id="message-813207461774753842">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Here, so that we aren&#39;t talking to an omnipresent voice, let me...&quot;
+<em>I plug the tv back in and turn it on.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:36 PM</span>
+
+            <div class="chatlog__message " data-message-id="813207521304641537" id="message-813207521304641537">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I show up on the screen.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813207543534714890" id="message-813207543534714890">
+                <div class="chatlog__content">
+                    <div class="markdown">hey wait actually </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:36 PM</span>
+
+            <div class="chatlog__message " data-message-id="813207570395299852" id="message-813207570395299852">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;There, that&#39;s more like it.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:36 PM</span>
+
+            <div class="chatlog__message " data-message-id="813207570478137374" id="message-813207570478137374">
+                <div class="chatlog__content">
+                    <div class="markdown">i dont like this form... </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813207596491997215" id="message-813207596491997215">
+                <div class="chatlog__content">
+                    <div class="markdown">hold up </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813207686875185204" id="message-813207686875185204">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>A red colored old computer monitor shows up in your hands.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813207718834864159" id="message-813207718834864159">
+                <div class="chatlog__content">
+                    <div class="markdown">Place it on the table. <span class="chatlog__edited-timestamp" title="21-Feb-21 07:37 PM">(edited)</span></div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:37 PM</span>
+
+            <div class="chatlog__message " data-message-id="813207765107343361" id="message-813207765107343361">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;What the...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:37 PM</span>
+
+            <div class="chatlog__message " data-message-id="813207820715294720" id="message-813207820715294720">
+                <div class="chatlog__content">
+                    <div class="markdown">just do it </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:37 PM</span>
+
+            <div class="chatlog__message " data-message-id="813207868806791188" id="message-813207868806791188">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I place the object on the table, across from Oliver.</em> 
+&quot;Here you go then...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:37 PM</span>
+
+            <div class="chatlog__message " data-message-id="813207933055664208" id="message-813207933055664208">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I start frantically scribbling on an empty page in the notebook.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:38 PM</span>
+
+            <div class="chatlog__message " data-message-id="813207946183049238" id="message-813207946183049238">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>Several mechanical arms burst out of it.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:38 PM</span>
+
+            <div class="chatlog__message " data-message-id="813207996062105609" id="message-813207996062105609">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Woah, what the hell?&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:38 PM</span>
+
+            <div class="chatlog__message " data-message-id="813208093465772032" id="message-813208093465772032">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>A body glitches into existence right below the computer, it has no head.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813208156712468480" id="message-813208156712468480">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>The computer places itself where the head would normally be.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:38 PM</span>
+
+            <div class="chatlog__message " data-message-id="813208159116066876" id="message-813208159116066876">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>This action causes me to jump, and send the pencil- pointed side up- into the ceiling.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:39 PM</span>
+
+            <div class="chatlog__message " data-message-id="813208230683213864" id="message-813208230683213864">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I get up.</em> <span class="chatlog__edited-timestamp" title="21-Feb-21 07:39 PM">(edited)</span></div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:39 PM</span>
+
+            <div class="chatlog__message " data-message-id="813208247619813427" id="message-813208247619813427">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;A physical body, huh? Neat.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:39 PM</span>
+
+            <div class="chatlog__message " data-message-id="813208261816877076" id="message-813208261816877076">
+                <div class="chatlog__content">
+                    <div class="markdown">Hey. </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813208336950493184" id="message-813208336950493184">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I extend my arm.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:39 PM</span>
+
+            <div class="chatlog__message " data-message-id="813208430264320030" id="message-813208430264320030">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>Reluctantly, I shake it.</em>
+&quot;Nice to meet ya.&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813208542302568448" id="message-813208542302568448">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>Behind my back, I send a message to the others with a vague detailing about what&#39;s going on.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:40 PM</span>
+
+            <div class="chatlog__message " data-message-id="813208666860945448" id="message-813208666860945448">
+                <div class="chatlog__content">
+                    <div class="markdown">Can I say hi to the friends you&#39;re messaging? </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:41 PM</span>
+
+            <div class="chatlog__message " data-message-id="813208825511411713" id="message-813208825511411713">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;I... Guess? Should I like, invite them over for a cup of tea or something?&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:42 PM</span>
+
+            <div class="chatlog__message " data-message-id="813209136052961310" id="message-813209136052961310">
+                <div class="chatlog__content">
+                    <div class="markdown">Don&#39;t worry, I&#39;m not gonna kill you or anything, I&#39;m not evil. </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813209202125176872" id="message-813209202125176872">
+                <div class="chatlog__content">
+                    <div class="markdown">Also, if I DID kill you, Ramen would kill me. </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813209235864289291" id="message-813209235864289291">
+                <div class="chatlog__content">
+                    <div class="markdown">So, yeah. </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813209263384035378" id="message-813209263384035378">
+                <div class="chatlog__content">
+                    <div class="markdown">Go ahead and invite them over. </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:43 PM</span>
+
+            <div class="chatlog__message " data-message-id="813209298308956160" id="message-813209298308956160">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Okay...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:44 PM</span>
+
+            <div class="chatlog__message " data-message-id="813209512881946695" id="message-813209512881946695">
+                <div class="chatlog__content">
+                    <div class="markdown">Welp this is going- <em>My screen displays static.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813209784936693782" id="message-813209784936693782">
+                <div class="chatlog__content">
+                    <div class="markdown">-horribly! It&#39;s not going well at all! Why did I do this... They are never going to trust me, I just wanted to be a part of the world I created- <em>My screen goes back to normal.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813209835330994187" id="message-813209835330994187">
+                <div class="chatlog__content">
+                    <div class="markdown">-to be great! </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:45 PM</span>
+
+            <div class="chatlog__message " data-message-id="813209861470683137" id="message-813209861470683137">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I start typing a message out on my phone, to the other members of our group</em>
+<div class="pre pre--multiline nohighlight">Hey everyone, there&#39;s someone here who would like to meet you all, I guess? He says that we should all meet up, so I guess Jackbox at my place? My address is [address], so I guess come on over..? - Jonesy</div> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:45 PM</span>
+
+            <div class="chatlog__message " data-message-id="813209866172235808" id="message-813209866172235808">
+                <div class="chatlog__content">
+                    <div class="markdown">Wait, what just happened? </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813209909851062322" id="message-813209909851062322">
+                <div class="chatlog__content">
+                    <div class="markdown">That was.... </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:45 PM</span>
+
+            <div class="chatlog__message " data-message-id="813209944144871425" id="message-813209944144871425">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>My phone buzzes from the message</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:45 PM</span>
+
+            <div class="chatlog__message " data-message-id="813209944144740365" id="message-813209944144740365">
+                <div class="chatlog__content">
+                    <div class="markdown">Something is wrong. </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:46 PM</span>
+
+            <div class="chatlog__message " data-message-id="813209962720526356" id="message-813209962720526356">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Odd...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:46 PM</span>
+
+            <div class="chatlog__message " data-message-id="813210008787484712" id="message-813210008787484712">
+                <div class="chatlog__content">
+                    <div class="markdown">What the...? </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:46 PM</span>
+
+            <div class="chatlog__message " data-message-id="813210034519408641" id="message-813210034519408641">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Strange indeed...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:46 PM</span>
+
+            <div class="chatlog__message " data-message-id="813210072549031966" id="message-813210072549031966">
+                <div class="chatlog__content">
+                    <div class="markdown">So many narrative errors and contradictions... </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813210110880645170" id="message-813210110880645170">
+                <div class="chatlog__content">
+                    <div class="markdown">It&#39;s nearby. </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:46 PM</span>
+
+            <div class="chatlog__message " data-message-id="813210158481801237" id="message-813210158481801237">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;What&#39;s nearby?&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:47 PM</span>
+
+            <div class="chatlog__message " data-message-id="813210250080550934" id="message-813210250080550934">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>My screen displays a warning symbol.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813210273389084704" id="message-813210273389084704">
+                <div class="chatlog__content">
+                    <div class="markdown">The corruption. </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:47 PM</span>
+
+            <div class="chatlog__message " data-message-id="813210321991893012" id="message-813210321991893012">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;That can&#39;t be good...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:47 PM</span>
+
+            <div class="chatlog__message " data-message-id="813210414614708279" id="message-813210414614708279">
+                <div class="chatlog__content">
+                    <div class="markdown">A plot device used whenever something weird and unexplained happens in the narrative. </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813210580299022396" id="message-813210580299022396">
+                <div class="chatlog__content">
+                    <div class="markdown">I have to eliminate it to stop the weird stuff. </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:48 PM</span>
+
+            <div class="chatlog__message " data-message-id="813210586170130503" id="message-813210586170130503">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I type out another message on my phone.</em>
+<div class="pre pre--multiline nohighlight">Abort, abort, I repeat, do not come here! There&#39;s something wrong around here, and we don&#39;t know what it is. -Jonesy</div> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:49 PM</span>
+
+            <div class="chatlog__message " data-message-id="813210729128656896" id="message-813210729128656896">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I go to the back room, I repeat, the BACK ROOM, not the backrooms.</em> <span class="chatlog__edited-timestamp" title="21-Feb-21 07:49 PM">(edited)</span></div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813210783428640828" id="message-813210783428640828">
+                <div class="chatlog__content">
+                    <div class="markdown">Found it. </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813210976023347200" id="message-813210976023347200">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>A strange black thing in the corner starts moving away from Impulse.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813211035066433566" id="message-813211035066433566">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>It looks like its absorbing the light around it.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813211085511327755" id="message-813211085511327755">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I turn on the light and it fades away.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813211119815753738" id="message-813211119815753738">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I head back to the living room.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813211137487011852" id="message-813211137487011852">
+                <div class="chatlog__content">
+                    <div class="markdown">Fixed it. </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:50 PM</span>
+
+            <div class="chatlog__message " data-message-id="813211183879290880" id="message-813211183879290880">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;So we good?&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:50 PM</span>
+
+            <div class="chatlog__message " data-message-id="813211198282792980" id="message-813211198282792980">
+                <div class="chatlog__content">
+                    <div class="markdown">Yeah. </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:51 PM</span>
+
+            <div class="chatlog__message " data-message-id="813211273562685460" id="message-813211273562685460">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Cool.&quot;
+<em>I delete my most recent message.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/813211363248701501/5ecd29841523ddbd4f25114507d9cef5.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Nathan Bolt (In-RP Impulse)#0000" data-user-id="813211363248701501" style="">Nathan Bolt (In-RP Impulse)</span>
+
+            <span class="chatlog__bot-tag">BOT</span>
+
+        <span class="chatlog__timestamp">21-Feb-21 07:51 PM</span>
+
+            <div class="chatlog__message " data-message-id="813211364054794260" id="message-813211364054794260">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;I CAME AS FAST AS I COULD- oh its you.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:51 PM</span>
+
+            <div class="chatlog__message " data-message-id="813211380500135987" id="message-813211380500135987">
+                <div class="chatlog__content">
+                    <div class="markdown">Hi! </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:51 PM</span>
+
+            <div class="chatlog__message " data-message-id="813211446275604520" id="message-813211446275604520">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I wave.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/813211363248701501/5ecd29841523ddbd4f25114507d9cef5.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Nathan Bolt (In-RP Impulse)#0000" data-user-id="813211363248701501" style="">Nathan Bolt (In-RP Impulse)</span>
+
+            <span class="chatlog__bot-tag">BOT</span>
+
+        <span class="chatlog__timestamp">21-Feb-21 07:51 PM</span>
+
+            <div class="chatlog__message " data-message-id="813211455909789726" id="message-813211455909789726">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;You are the god dude, right?&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:52 PM</span>
+
+            <div class="chatlog__message " data-message-id="813211521634664457" id="message-813211521634664457">
+                <div class="chatlog__content">
+                    <div class="markdown">Don&#39;t call me a god again, I kinda regret calling myself that. </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:52 PM</span>
+
+            <div class="chatlog__message " data-message-id="813211532623478834" id="message-813211532623478834">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I wave too.</em>
+&quot;Hi, you haven&#39;t met us before...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:52 PM</span>
+
+            <div class="chatlog__message " data-message-id="813211570413764638" id="message-813211570413764638">
+                <div class="chatlog__content">
+                    <div class="markdown">Just refer to me as one of the creators of this world. </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:52 PM</span>
+
+            <div class="chatlog__message " data-message-id="813211623694663712" id="message-813211623694663712">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;At least, not in this timeline...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:52 PM</span>
+
+            <div class="chatlog__message " data-message-id="813211686542508042" id="message-813211686542508042">
+                <div class="chatlog__content">
+                    <div class="markdown">Okay so, meet Adrian, aka Jonesy, and Oliver, aka alternate timeline Adrian. </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/813211363248701501/5ecd29841523ddbd4f25114507d9cef5.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Nathan Bolt (In-RP Impulse)#0000" data-user-id="813211363248701501" style="">Nathan Bolt (In-RP Impulse)</span>
+
+            <span class="chatlog__bot-tag">BOT</span>
+
+        <span class="chatlog__timestamp">21-Feb-21 07:53 PM</span>
+
+            <div class="chatlog__message " data-message-id="813211727104573481" id="message-813211727104573481">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Sup.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:53 PM</span>
+
+            <div class="chatlog__message " data-message-id="813211755664769106" id="message-813211755664769106">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;It&#39;s confusing, I know.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:54 PM</span>
+
+            <div class="chatlog__message " data-message-id="813212046241824789" id="message-813212046241824789">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;...So now what?&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:54 PM</span>
+
+            <div class="chatlog__message " data-message-id="813212054843817984" id="message-813212054843817984">
+                <div class="chatlog__content">
+                    <div class="markdown">Wait, Oliver, remember evil Impulse? </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:54 PM</span>
+
+            <div class="chatlog__message " data-message-id="813212109746733076" id="message-813212109746733076">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Vaugely...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:54 PM</span>
+
+            <div class="chatlog__message " data-message-id="813212109848576041" id="message-813212109848576041">
+                <div class="chatlog__content">
+                    <div class="markdown">From the timeline with the suicidal Ramens? </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813212154072793088" id="message-813212154072793088">
+                <div class="chatlog__content">
+                    <div class="markdown">Okay, lets see if I can... </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:55 PM</span>
+
+            <div class="chatlog__message " data-message-id="813212274314575872" id="message-813212274314575872">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I pull up JPP7 on the TV</em>
+&quot;Quiplash anyone?&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:55 PM</span>
+
+            <div class="chatlog__message " data-message-id="813212304211705916" id="message-813212304211705916">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>My screen displays static, and a glass of water appears on the table.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813212435422117958" id="message-813212435422117958">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I toss the glass at my screen, and it passes through into the static.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813212475528577055" id="message-813212475528577055">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>My screen switches back to normal.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813212490774609971" id="message-813212490774609971">
+                <div class="chatlog__content">
+                    <div class="markdown">That... </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:56 PM</span>
+
+            <div class="chatlog__message " data-message-id="813212518751010826" id="message-813212518751010826">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Huh, neat.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:56 PM</span>
+
+            <div class="chatlog__message " data-message-id="813212523155292170" id="message-813212523155292170">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Huh, neat.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:56 PM</span>
+
+            <div class="chatlog__message " data-message-id="813212524085510184" id="message-813212524085510184">
+                <div class="chatlog__content">
+                    <div class="markdown">Actually worked? </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813212546756640789" id="message-813212546756640789">
+                <div class="chatlog__content">
+                    <div class="markdown">Lmao. </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/813211363248701501/5ecd29841523ddbd4f25114507d9cef5.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Nathan Bolt (In-RP Impulse)#0000" data-user-id="813211363248701501" style="">Nathan Bolt (In-RP Impulse)</span>
+
+            <span class="chatlog__bot-tag">BOT</span>
+
+        <span class="chatlog__timestamp">21-Feb-21 07:56 PM</span>
+
+            <div class="chatlog__message " data-message-id="813212565915172934" id="message-813212565915172934">
+                <div class="chatlog__content">
+                    <div class="markdown">Lmao. </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:56 PM</span>
+
+            <div class="chatlog__message " data-message-id="813212621976895509" id="message-813212621976895509">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Was... that supposed to happen?&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 07:56 PM</span>
+
+            <div class="chatlog__message " data-message-id="813212651340562433" id="message-813212651340562433">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;I&#39;m not sure...&quot; </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813213461844721664" id="message-813213461844721664">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;We are only waiting for like, two more, right? It&#39;s not just us.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:00 PM</span>
+
+            <div class="chatlog__message " data-message-id="813213470266228797" id="message-813213470266228797">
+                <div class="chatlog__content">
+                    <div class="markdown">(any idea where this story is supposed to go) </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813213503057297478" id="message-813213503057297478">
+                <div class="chatlog__content">
+                    <div class="markdown">yeah </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:00 PM</span>
+
+            <div class="chatlog__message " data-message-id="813213507138879490" id="message-813213507138879490">
+                <div class="chatlog__content">
+                    <div class="markdown">(I got nothin) </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:00 PM</span>
+
+            <div class="chatlog__message " data-message-id="813213580690325504" id="message-813213580690325504">
+                <div class="chatlog__content">
+                    <div class="markdown">hmm </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813213619008962630" id="message-813213619008962630">
+                <div class="chatlog__content">
+                    <div class="markdown">wanna see the Inbetween? <span class="chatlog__edited-timestamp" title="21-Feb-21 08:00 PM">(edited)</span></div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:01 PM</span>
+
+            <div class="chatlog__message " data-message-id="813213727557287956" id="message-813213727557287956">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;I... don&#39;t know if that&#39;s a good idea...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:01 PM</span>
+
+            <div class="chatlog__message " data-message-id="813213804661178369" id="message-813213804661178369">
+                <div class="chatlog__content">
+                    <div class="markdown">Do you even know what it is? </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:01 PM</span>
+
+            <div class="chatlog__message " data-message-id="813213873788157973" id="message-813213873788157973">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;It&#39;s not that bad of a place, actually.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:01 PM</span>
+
+            <div class="chatlog__message " data-message-id="813213961763422319" id="message-813213961763422319">
+                <div class="chatlog__content">
+                    <div class="markdown">Well, admittedly, things have changed a bit. </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813214000082976809" id="message-813214000082976809">
+                <div class="chatlog__content">
+                    <div class="markdown">The Void&#39;s still the same tho. </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:02 PM</span>
+
+            <div class="chatlog__message " data-message-id="813214114037104702" id="message-813214114037104702">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I shudder at the thought of The Void.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:03 PM</span>
+
+            <div class="chatlog__message " data-message-id="813214238071455755" id="message-813214238071455755">
+                <div class="chatlog__content">
+                    <div class="markdown">Why are you scared of the void again? </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813214257919033345" id="message-813214257919033345">
+                <div class="chatlog__content">
+                    <div class="markdown">Its a pretty chill place. <span class="chatlog__edited-timestamp" title="21-Feb-21 08:03 PM">(edited)</span></div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:03 PM</span>
+
+            <div class="chatlog__message " data-message-id="813214293045542953" id="message-813214293045542953">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;It&#39;s just... empty.&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:03 PM</span>
+
+            <div class="chatlog__message " data-message-id="813214321618059266" id="message-813214321618059266">
+                <div class="chatlog__content">
+                    <div class="markdown">In fact, its the safest place in all of the Inbetween! </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/embed/avatars/1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy52#8726" data-user-id="764900556342296596" style="">Oliver Cohen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:03 PM</span>
+
+            <div class="chatlog__message " data-message-id="813214339082748025" id="message-813214339082748025">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;5 outta 5 would jump into again&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:03 PM</span>
+
+            <div class="chatlog__message " data-message-id="813214443483562064" id="message-813214443483562064">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I have a concerned face on after that comment.</em>\ </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813214504161771530" id="message-813214504161771530">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;They clearly are just another version of me...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:04 PM</span>
+
+            <div class="chatlog__message " data-message-id="813214632071397376" id="message-813214632071397376">
+                <div class="chatlog__content">
+                    <div class="markdown">Don&#39;t worry, the void is just the spot closest to my reality, we probably won&#39;t even head over there. </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813214682009436160" id="message-813214682009436160">
+                <div class="chatlog__content">
+                    <div class="markdown">I really want to show you The Archive and The Lobby. </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:05 PM</span>
+
+            <div class="chatlog__message " data-message-id="813214938256506901" id="message-813214938256506901">
+                <div class="chatlog__content">
+                    <div class="markdown">(I gtg for a few seconds, I&#39;ll be right back) </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/252476454267387905/380a5478bac7e6b40bdbf1bf4cc59db5.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ramen#4608" data-user-id="252476454267387905" style="color: rgb(155,89,182)">Ramen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:20 PM</span>
+
+            <div class="chatlog__message " data-message-id="813218575074328576" id="message-813218575074328576">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>Ramen is casually eating Ravioli while watching from the clouds.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:35 PM</span>
+
+            <div class="chatlog__message " data-message-id="813222376677834809" id="message-813222376677834809">
+                <div class="chatlog__content">
+                    <div class="markdown">hi ramen </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813222406960971796" id="message-813222406960971796">
+                <div class="chatlog__content">
+                    <div class="markdown">sorry for being an asshole earlier </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/252476454267387905/380a5478bac7e6b40bdbf1bf4cc59db5.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ramen#4608" data-user-id="252476454267387905" style="color: rgb(155,89,182)">Ramen</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:44 PM</span>
+
+            <div class="chatlog__message " data-message-id="813224722346409996" id="message-813224722346409996">
+                <div class="chatlog__content">
+                    <div class="markdown">It fine </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:54 PM</span>
+
+            <div class="chatlog__message " data-message-id="813227066128203837" id="message-813227066128203837">
+                <div class="chatlog__content">
+                    <div class="markdown">(k I&#39;m back uhhhh) <span class="chatlog__edited-timestamp" title="21-Feb-21 08:54 PM">(edited)</span></div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813227178719313920" id="message-813227178719313920">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;I guess if you guys think it&#39;s a good idea, then let&#39;s go ahead and do that...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:58 PM</span>
+
+            <div class="chatlog__message " data-message-id="813228219041710152" id="message-813228219041710152">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>A pitch black colored hammer appears in Impulse&#39;s hands, he hits a wall with it, and it begins to warp and glitch out.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="813228289349910567" id="message-813228289349910567">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>He walks through into <span class="mention">#the-anti-void</span>.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/813211363248701501/5ecd29841523ddbd4f25114507d9cef5.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Nathan Bolt (In-RP Impulse)#0000" data-user-id="813211363248701501" style="">Nathan Bolt (In-RP Impulse)</span>
+
+            <span class="chatlog__bot-tag">BOT</span>
+
+        <span class="chatlog__timestamp">21-Feb-21 08:59 PM</span>
+
+            <div class="chatlog__message " data-message-id="813228347126972426" id="message-813228347126972426">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;Uh, should we follow him?&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:59 PM</span>
+
+            <div class="chatlog__message " data-message-id="813228399530082305" id="message-813228399530082305">
+                <div class="chatlog__content">
+                    <div class="markdown">&quot;I don&#39;t see why not...&quot; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">21-Feb-21 08:59 PM</span>
+
+            <div class="chatlog__message " data-message-id="813228458859036704" id="message-813228458859036704">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>You all walk through into <span class="mention">#the-anti-void</span>.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+</div>
+
+<div class="postamble">
+    <div class="postamble__entry">Exported 273 message(s)</div>
+</div>
+
+</body>
+</html>

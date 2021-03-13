@@ -1,0 +1,1214 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>GGROUPS Private Channel by piOS - the-literature-club</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <style>
+        /* General */
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-300.woff);
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-400.woff);
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-500.woff);
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-600.woff);
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-700.woff);
+    font-weight: 700;
+}
+
+body {
+    font-family: "Whitney", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 17px;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+img {
+    object-fit: contain;
+}
+
+.markdown {
+    max-width: 100%;
+    white-space: pre-wrap;
+    line-height: 1.3;
+    overflow-wrap: break-word;
+}
+
+.spoiler {
+    width: fit-content;
+}
+
+.spoiler--hidden {
+    cursor: pointer;
+}
+
+.spoiler-text {
+    border-radius: 3px;
+}
+
+.spoiler--hidden .spoiler-text {
+    color: rgba(0, 0, 0, 0);
+}
+
+.spoiler--hidden .spoiler-text::selection {
+    color: rgba(0, 0, 0, 0);
+}
+
+.spoiler-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: 3px;
+}
+
+.spoiler--hidden .spoiler-image {
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.spoiler--hidden .spoiler-image img {
+    filter: blur(44px);
+}
+
+.spoiler--hidden .spoiler-image:after {
+    content: "SPOILER";
+    color: #dcddde;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 600;
+    padding: 0.5em 0.7em;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    font-size: 0.9em;
+}
+
+.spoiler--hidden:hover .spoiler-image:after {
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.quote {
+    margin: 0.1em 0;
+    padding-left: 0.6em;
+    border-left: 4px solid;
+    border-radius: 3px;
+}
+
+.pre {
+    font-family: "Consolas", "Courier New", Courier, monospace;
+}
+
+.pre--multiline {
+    margin-top: 0.25em;
+    padding: 0.5em;
+    border: 2px solid;
+    border-radius: 5px;
+}
+
+.pre--inline {
+    padding: 2px;
+    border-radius: 3px;
+    font-size: 0.85em;
+}
+
+.mention {
+    border-radius: 3px;
+    padding: 0 2px;
+    color: #7289da;
+    background: rgba(114, 137, 218, .1);
+    font-weight: 500;
+}
+
+.emoji {
+    width: 1.25em;
+    height: 1.25em;
+    margin: 0 0.06em;
+    vertical-align: -0.4em;
+}
+
+.emoji--small {
+    width: 1em;
+    height: 1em;
+}
+
+.emoji--large {
+    width: 2.8em;
+    height: 2.8em;
+}
+
+/* Preamble */
+
+.preamble {
+    display: grid;
+    margin: 0 0.3em 0.6em 0.3em;
+    max-width: 100%;
+    grid-template-columns: auto 1fr;
+}
+
+.preamble__guild-icon-container {
+    grid-column: 1;
+}
+
+.preamble__guild-icon {
+    max-width: 88px;
+    max-height: 88px;
+}
+
+.preamble__entries-container {
+    grid-column: 2;
+    margin-left: 0.6em;
+}
+
+.preamble__entry {
+    font-size: 1.4em;
+}
+
+.preamble__entry--small {
+    font-size: 1em;
+}
+
+/* Chatlog */
+
+.chatlog {
+    max-width: 100%;
+}
+
+.chatlog__message-group {
+    display: grid;
+    margin: 0 0.6em;
+    padding: 0.9em 0;
+    border-top: 1px solid;
+    grid-template-columns: auto 1fr;
+}
+
+.chatlog__author-avatar-container {
+    grid-column: 1;
+    width: 40px;
+    height: 40px;
+}
+
+.chatlog__author-avatar {
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+}
+
+.chatlog__messages {
+    grid-column: 2;
+    margin-left: 1.2em;
+    min-width: 50%;
+}
+
+.chatlog__author-name {
+    font-weight: 500;
+}
+
+.chatlog__timestamp {
+    margin-left: 0.3em;
+    font-size: 0.75em;
+}
+
+.chatlog__message {
+    padding: 0.1em 0.3em;
+    margin: 0 -0.3em;
+    background-color: transparent;
+    transition: background-color 1s ease;
+}
+
+.chatlog__content {
+    font-size: 0.95em;
+    word-wrap: break-word;
+}
+
+.chatlog__edited-timestamp {
+    margin-left: 0.15em;
+    font-size: 0.8em;
+}
+
+.chatlog__attachment {
+    margin-top: 0.3em;
+}
+
+.chatlog__attachment-thumbnail {
+    vertical-align: top;
+    max-width: 45vw;
+    max-height: 500px;
+    border-radius: 3px;
+}
+
+.chatlog__embed {
+    display: flex;
+    margin-top: 0.3em;
+    max-width: 520px;
+}
+
+.chatlog__embed-color-pill {
+    flex-shrink: 0;
+    width: 0.25em;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.chatlog__embed-content-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5em 0.6em;
+    border: 1px solid;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.chatlog__embed-content {
+    display: flex;
+    width: 100%;
+}
+
+.chatlog__embed-text {
+    flex: 1;
+}
+
+.chatlog__embed-author {
+    display: flex;
+    margin-bottom: 0.3em;
+    align-items: center;
+}
+
+.chatlog__embed-author-icon {
+    margin-right: 0.5em;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.chatlog__embed-author-name {
+    font-size: 0.875em;
+    font-weight: 600;
+}
+
+.chatlog__embed-title {
+    margin-bottom: 0.2em;
+    font-size: 0.875em;
+    font-weight: 600;
+}
+
+.chatlog__embed-description {
+    font-weight: 500;
+    font-size: 0.85em;
+}
+
+.chatlog__embed-fields {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.chatlog__embed-field {
+    flex: 0;
+    min-width: 100%;
+    max-width: 506px;
+    padding-top: 0.6em;
+    font-size: 0.875em;
+}
+
+.chatlog__embed-field--inline {
+    flex: 1;
+    flex-basis: auto;
+    min-width: 150px;
+}
+
+.chatlog__embed-field-name {
+    margin-bottom: 0.2em;
+    font-weight: 600;
+}
+
+.chatlog__embed-field-value {
+    font-weight: 500;
+}
+
+.chatlog__embed-thumbnail {
+    flex: 0;
+    margin-left: 1.2em;
+    max-width: 80px;
+    max-height: 80px;
+    border-radius: 3px;
+}
+
+.chatlog__embed-image-container {
+    margin-top: 0.6em;
+}
+
+.chatlog__embed-image {
+    max-width: 500px;
+    max-height: 400px;
+    border-radius: 3px;
+}
+
+.chatlog__embed-footer {
+    margin-top: 0.6em;
+}
+
+.chatlog__embed-footer-icon {
+    margin-right: 0.2em;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+.chatlog__embed-footer-text {
+    font-size: 0.75em;
+    font-weight: 500;
+}
+
+.chatlog__reactions {
+    display: flex;
+}
+
+.chatlog__reaction {
+    display: flex;
+    align-items: center;
+    margin: 0.35em 0.1em 0.1em 0.1em;
+    padding: 0.2em 0.35em;
+    border-radius: 3px;
+}
+
+.chatlog__reaction-count {
+    min-width: 9px;
+    margin-left: 0.35em;
+    font-size: 0.875em;
+}
+
+.chatlog__bot-tag {
+    position: relative;
+    top: -.2em;
+    margin-left: 0.3em;
+    padding: 0.05em 0.3em;
+    border-radius: 3px;
+    vertical-align: middle;
+    line-height: 1.3;
+    background: #7289da;
+    color: #ffffff;
+    font-size: 0.625em;
+    font-weight: 500;
+}
+
+/* Postamble */
+
+.postamble {
+    margin: 1.4em 0.3em 0.6em 0.3em;
+    padding: 1em;
+    border-top: 1px solid;
+}
+    </style>
+    <style>
+        /* General */
+
+body {
+    background-color: #36393e;
+    color: #dcddde;
+}
+
+a {
+    color: #0096cf;
+}
+
+.spoiler-text {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.spoiler--hidden .spoiler-text {
+    background-color: #202225;
+}
+
+.spoiler--hidden:hover .spoiler-text {
+    background-color: rgba(32, 34, 37, 0.8);
+}
+
+.quote {
+    border-color: #4f545c;
+}
+
+.pre {
+    background-color: #2f3136 !important;
+}
+
+.pre--multiline {
+    border-color: #282b30 !important;
+    color: #b9bbbe !important;
+}
+
+/* === Preamble === */
+
+.preamble__entry {
+    color: #ffffff;
+}
+
+/* Chatlog */
+
+.chatlog__message-group {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.chatlog__author-name {
+    color: #ffffff;
+}
+
+.chatlog__timestamp {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.chatlog__message--highlighted {
+    background-color: rgba(114, 137, 218, 0.2) !important;
+}
+
+.chatlog__message--pinned {
+    background-color: rgba(249, 168, 37, 0.05);
+}
+
+.chatlog__edited-timestamp {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.chatlog__embed-color-pill--default {
+    background-color: rgba(79, 84, 92, 1);
+}
+
+.chatlog__embed-content-container {
+    background-color: rgba(46, 48, 54, 0.3);
+    border-color: rgba(46, 48, 54, 0.6);
+}
+
+.chatlog__embed-author-name {
+    color: #ffffff;
+}
+
+.chatlog__embed-author-name-link {
+    color: #ffffff;
+}
+
+.chatlog__embed-title {
+    color: #ffffff;
+}
+
+.chatlog__embed-description {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chatlog__embed-field-name {
+    color: #ffffff;
+}
+
+.chatlog__embed-field-value {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chatlog__embed-footer {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chatlog__reaction {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.chatlog__reaction-count {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Postamble */
+
+.postamble {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.postamble__entry {
+    color: #ffffff;
+}
+    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.pre--multiline').forEach(block => hljs.highlightBlock(block));
+        });
+    </script>
+
+    <script>
+        function scrollToMessage(event, id) {
+            var element = document.getElementById('message-' + id);
+
+            if (element) {
+                event.preventDefault();
+
+                element.classList.add('chatlog__message--highlighted');
+
+                window.scrollTo({
+                    top: element.getBoundingClientRect().top - document.body.getBoundingClientRect().top - (window.innerHeight / 2),
+                    behavior: 'smooth'
+                });
+
+                window.setTimeout(function() {
+                    element.classList.remove('chatlog__message--highlighted');
+                }, 2000);
+            }
+        }
+
+        function showSpoiler(event, element) {
+            if (element && element.classList.contains('spoiler--hidden')) {
+                event.preventDefault();
+                element.classList.remove('spoiler--hidden');
+            }
+        }
+    </script>
+</head>
+<body>
+
+<div class="preamble">
+    <div class="preamble__guild-icon-container">
+        <img class="preamble__guild-icon" src="https://cdn.discordapp.com/icons/793203674625212466/ce7ac2e697f072189575a2bb751f2d86.png" alt="Guild icon">
+    </div>
+    <div class="preamble__entries-container">
+        <div class="preamble__entry">GGROUPS Private Channel by piOS</div>
+        <div class="preamble__entry">Inbetween / the-literature-club</div>
+
+            <div class="preamble__entry preamble__entry--small">oh fuck</div>
+
+    </div>
+</div>
+
+<div class="chatlog">
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">25-Feb-21 03:04 PM</span>
+
+            <div class="chatlog__message " data-message-id="814588625273880626" id="message-814588625273880626">
+                <div class="chatlog__content">
+                    <div class="markdown">NEW AREA FORMING </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="814588679489978399" id="message-814588679489978399">
+                <div class="chatlog__content">
+                    <div class="markdown">50% COMPLETE <span class="chatlog__edited-timestamp" title="25-Feb-21 03:04 PM">(edited)</span></div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="814588827015839794" id="message-814588827015839794">
+                <div class="chatlog__content">
+                    <div class="markdown">100% COMPLETE </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="814588890894827521" id="message-814588890894827521">
+                <div class="chatlog__content">
+                    <div class="markdown">MOVING THE DOKI DOKI LITERATURE CLUB CHARACTER GAME OBJECTS </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="814588895290327140" id="message-814588895290327140">
+                <div class="chatlog__content">
+                    <div class="markdown">DONE </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="814588922516340768" id="message-814588922516340768">
+                <div class="chatlog__content">
+                    <div class="markdown">ROOM CREATION COMPLETE </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/814589025867268096/ac093420cade9e37fd84631171b0c93b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Monika#0000" data-user-id="814589025867268096" style="">Monika</span>
+
+            <span class="chatlog__bot-tag">BOT</span>
+
+        <span class="chatlog__timestamp">25-Feb-21 03:05 PM</span>
+
+            <div class="chatlog__message " data-message-id="814589026853584957" id="message-814589026853584957">
+                <div class="chatlog__content">
+                    <div class="markdown">Oh, I guess we&#39;re back </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="814589052149432321" id="message-814589052149432321">
+                <div class="chatlog__content">
+                    <div class="markdown">Hi, MC </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">25-Feb-21 03:06 PM</span>
+
+            <div class="chatlog__message " data-message-id="814589218876817438" id="message-814589218876817438">
+                <div class="chatlog__content">
+                    <div class="markdown">CHANGING DDLC CHARACTER GAME OBJECTS TO GIVE THEM &quot;PHYSICAL&quot; BODIES WITHIN THE RP </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="814589225080455178" id="message-814589225080455178">
+                <div class="chatlog__content">
+                    <div class="markdown">DONE </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">25-Feb-21 03:12 PM</span>
+
+            <div class="chatlog__message " data-message-id="814590753123598368" id="message-814590753123598368">
+                <div class="chatlog__content">
+                    <div class="markdown">uhhh what does that mean </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">25-Feb-21 03:13 PM</span>
+
+            <div class="chatlog__message " data-message-id="814590808334008331" id="message-814590808334008331">
+                <div class="chatlog__content">
+                    <div class="markdown">they are no longer cubes </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">25-Feb-21 03:13 PM</span>
+
+            <div class="chatlog__message " data-message-id="814590832593207383" id="message-814590832593207383">
+                <div class="chatlog__content">
+                    <div class="markdown">oh </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">25-Feb-21 03:29 PM</span>
+
+            <div class="chatlog__message " data-message-id="814594962867093526" id="message-814594962867093526">
+                <div class="chatlog__content">
+                    <div class="markdown">WELCOME <span class="chatlog__edited-timestamp" title="25-Feb-21 03:29 PM">(edited)</span></div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="814594991291629568" id="message-814594991291629568">
+                <div class="chatlog__content">
+                    <div class="markdown">TO THE LITERATURE CLUB <span class="chatlog__edited-timestamp" title="25-Feb-21 03:29 PM">(edited)</span></div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="814595010653323365" id="message-814595010653323365">
+                <div class="chatlog__content">
+                    <div class="markdown">HAVE FUN </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/252476454267387905/380a5478bac7e6b40bdbf1bf4cc59db5.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ramen#4608" data-user-id="252476454267387905" style="color: rgb(155,89,182)">Ramen</span>
+
+
+        <span class="chatlog__timestamp">25-Feb-21 03:29 PM</span>
+
+            <div class="chatlog__message " data-message-id="814595023998812212" id="message-814595023998812212">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>Walking through the lobby doors, the other side of the doors appears as a wall to a classroom. Upon further inspection, it is not the lobby, or a classroom, but a clubroom.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">25-Feb-21 03:29 PM</span>
+
+            <div class="chatlog__message " data-message-id="814595039463735347" id="message-814595039463735347">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>I leave.</em> </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/814589025867268096/ac78f8f4ac9bdd46877c4572c275ebcd.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Natsuki#0000" data-user-id="814589025867268096" style="">Natsuki</span>
+
+            <span class="chatlog__bot-tag">BOT</span>
+
+        <span class="chatlog__timestamp">25-Feb-21 03:30 PM</span>
+
+            <div class="chatlog__message " data-message-id="814595083236147290" id="message-814595083236147290">
+                <div class="chatlog__content">
+                    <div class="markdown">Who the hell are you? </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/252476454267387905/380a5478bac7e6b40bdbf1bf4cc59db5.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ramen#4608" data-user-id="252476454267387905" style="color: rgb(155,89,182)">Ramen</span>
+
+
+        <span class="chatlog__timestamp">25-Feb-21 03:30 PM</span>
+
+            <div class="chatlog__message " data-message-id="814595119612952597" id="message-814595119612952597">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>This is where intro music would play</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="814595195894366270" id="message-814595195894366270">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>also i&#39;m sick of this right now i&#39;m gonna go play terraria</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="814595278018445323" id="message-814595278018445323">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>Ramen goes off to play terraria while ryan is still confused where he is and who these people are.</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="814595344527785995" id="message-814595344527785995">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>Ryan hears this in his head and thinks that some of the meta might have seeped through</em> </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="814595389277732904" id="message-814595389277732904">
+                <div class="chatlog__content">
+                    <div class="markdown"><em>Ryan forgets this as it is just a bit, and non-canon</em> <span class="chatlog__edited-timestamp" title="25-Feb-21 03:31 PM">(edited)</span></div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Impulse#7647" data-user-id="663927974185140256" style="color: rgb(155,89,182)">Impulse</span>
+
+
+        <span class="chatlog__timestamp">01-Mar-21 03:36 AM</span>
+
+            <div class="chatlog__message " data-message-id="815864992289128469" id="message-815864992289128469">
+                <div class="chatlog__content">
+                    <div class="markdown">!lyrics why did I say okie doki </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/235088799074484224/9b29bfc497a70b6cc85bb2087936f8fd.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Rythm#3722" data-user-id="235088799074484224" style="color: rgb(255,46,46)">Rythm</span>
+
+            <span class="chatlog__bot-tag">BOT</span>
+
+        <span class="chatlog__timestamp">01-Mar-21 03:36 AM</span>
+
+            <div class="chatlog__message " data-message-id="815864993006092308" id="message-815864993006092308">
+                <div class="chatlog__content">
+                    <div class="markdown"><img class="emoji " alt="🔍" title="🔍" src="https://twemoji.maxcdn.com/2/72x72/1f50d.png"> <strong>Searching lyrics for </strong> <span class="pre pre--inline">why did I say okie doki</span> <span class="chatlog__edited-timestamp" title="01-Mar-21 03:36 AM">(edited)</span></div>
+                </div>
+
+
+                    <div class="chatlog__embed">
+                            <div class="chatlog__embed-color-pill" style="background-color: rgba(0,255,0,255)"></div>
+
+                        <div class="chatlog__embed-content-container">
+                            <div class="chatlog__embed-content">
+                                <div class="chatlog__embed-text">
+
+                                        <div class="chatlog__embed-title">
+                                                <div class="markdown">The Stupendium - Why Did I Say Okie Doki?</div>
+                                        </div>
+
+                                        <div class="chatlog__embed-description">
+                                            <div class="markdown">I walk to school with my best friend
+Surprise, surprise, she&#39;s late again
+She&#39;s got a club she wants me in
+Don&#39;t think I&#39;ve ever raised a pen
+I&#39;ll consider it, sure
+No fan of literature
+Books with less pictures than words
+Leave me a little bit bored
+But hey, they promised cupcakes
+So it&#39;s a chance that I&#39;ll take
+Four gorgeous girls await me
+Okay, I think that I&#39;ll stay
+
+Sayori&#39;s aloof and kooky
+Natsuki&#39;s sweet and cutesy
+Yuri is deep and brooding
+Monika&#39;s brains and beauty
+There&#39;s a festival needs planning
+Swear I won&#39;t leave them hanging
+So many clubs to rival us
+I guess it&#39;s just the five of us
+
+Just the five of us
+We can make it if we try
+But each day that passes by
+Is tearing pages from my mind
+Just the five of us
+No escaping if I tried
+Though these maidens might seem kind
+There&#39;s something going on behind
+They looked so sad and lonely
+I sold my soul for poetry
+This hell is members only
+Why did I say Okie-Doki?
+
+I walk to school alone again
+I&#39;m not a guy with many friends
+I&#39;ve got no club, I&#39;ve time to spend
+So I read manga and stay in
+I run into Monika
+Says that I should just join hers
+It&#39;s a club for books with words
+But they need some more members
+I say okay
+I&#39;ll come along for just one day
+But just you try and get away
+When 3 gorgeous girls beg you to stay
+
+Natsuki&#39;s a brutish cutesy
+Yuri is too in to me
+Monika&#39;s brains and beauty
+It&#39;s almost festival time
+Could say we&#39;re cutting it fine
+The task may seem laborious
+I wonder where Sayori is?
+I guess it&#39;s just the four of us
+
+Just the four of us
+We can make it if we try
+But each day that passes by
+Is tearing pages from my mind
+Just the four of us
+No escaping if I tried
+Though these maidens might seem kind
+There&#39;s something going on behind
+They looked so sad and lonely
+I sold my soul for poetry
+This hell is members only
+Why did I say Okie-Doki
+
+Well I&#39;m back at school again
+Monika&#39;s my only friend
+Monika&#39;s my everything
+My beginning and my end
+
+Wait a second,weren&#39;t there other girls here?
+No.
+
+Monika&#39;s aloof and kooky
+Monika&#39;s sweet and cutesy
+Monika&#39;s is</div>
+                                        </div>
+
+                                </div>
+
+                                    <div class="chatlog__embed-thumbnail-container">
+                                        <a class="chatlog__embed-thumbnail-link" href="https://i.scdn.co/image/ab67616d0000b27365b60916e5be331634d94684">
+                                            <img class="chatlog__embed-thumbnail" src="https://i.scdn.co/image/ab67616d0000b27365b60916e5be331634d94684" alt="Thumbnail">
+                                        </a>
+                                    </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+            </div>
+            <div class="chatlog__message " data-message-id="815864993706672178" id="message-815864993706672178">
+                <div class="chatlog__content">
+                    <div class="markdown"> </div>
+                </div>
+
+
+                    <div class="chatlog__embed">
+                            <div class="chatlog__embed-color-pill" style="background-color: rgba(0,255,0,255)"></div>
+
+                        <div class="chatlog__embed-content-container">
+                            <div class="chatlog__embed-content">
+                                <div class="chatlog__embed-text">
+
+
+                                        <div class="chatlog__embed-description">
+                                            <div class="markdown">deep and brooding
+Monika&#39;s brains and beauty
+Monika sees right through me
+Monika&#39;s all that you need
+Monika&#39;s all that you need
+Monika&#39;s all that you need
+
+I&#39;m not an ugly guy
+But I can&#39;t understand why
+She&#39;d be so utterly in love she&#39;d leave her club mates to die
+Monika&#39;s obsession is ominous to be honest
+Omnipotent Goddess concocting demonic sonnets
+I could delete her but I never could harm Monika
+So I&#39;m trapped here forever.
+Where&#39;s my harmonica?
+
+Never thought I&#39;d get a girl
+Literally out of this world
+Guess she controls the universe
+Looks like it&#39;s just the two of us
+
+Just the two of us
+In this classroom in the sky
+Crimes of passion are just fine
+When enacted on AI
+Just the two of us
+Quite a drastic pick up line
+Leaving characters to die
+Just to guarantee you&#39;re mine
+She seemed so sad and lonely
+Don&#39;t think there&#39;s any hope for me
+This hell is members only
+
+Why did I say Okie Dokie?
+Why did I say Okie Dokie?
+Why did I say Okie Dokie?
+Why did I say Okie Dokie?
+Why did I say Okie Dokie?
+Say Okie</div>
+                                        </div>
+
+                                </div>
+
+                            </div>
+
+
+                                <div class="chatlog__embed-footer">
+                                        <img class="chatlog__embed-footer-icon" src="https://cdn.discordapp.com/avatars/663927974185140256/d10364838d037f747c7e718efecc95d0.png" alt="Footer icon">
+
+                                        <span class="chatlog__embed-footer-text">
+Requested by Impulse
+
+                                        </span>
+                                </div>
+                        </div>
+                    </div>
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/532682769462067222/a17458f5906a1cbb7327e99e77484fda.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="MrJonesy53#4224" data-user-id="532682769462067222" style="color: rgb(241,196,15)">MrLoki53</span>
+
+
+        <span class="chatlog__timestamp">03-Mar-21 10:14 PM</span>
+
+            <div class="chatlog__message " data-message-id="816871078403506216" id="message-816871078403506216">
+                <div class="chatlog__content">
+                    <div class="markdown">[I appear, then walk to <span class="mention">#the-lobby</span>] </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+</div>
+
+<div class="postamble">
+    <div class="postamble__entry">Exported 28 message(s)</div>
+</div>
+
+</body>
+</html>

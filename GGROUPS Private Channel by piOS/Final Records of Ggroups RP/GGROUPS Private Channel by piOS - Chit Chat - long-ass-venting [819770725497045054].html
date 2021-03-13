@@ -1,0 +1,2342 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>GGROUPS Private Channel by piOS - long-ass-venting</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <style>
+        /* General */
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-300.woff);
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-400.woff);
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-500.woff);
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-600.woff);
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-700.woff);
+    font-weight: 700;
+}
+
+body {
+    font-family: "Whitney", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 17px;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+img {
+    object-fit: contain;
+}
+
+.markdown {
+    max-width: 100%;
+    white-space: pre-wrap;
+    line-height: 1.3;
+    overflow-wrap: break-word;
+}
+
+.spoiler {
+    width: fit-content;
+}
+
+.spoiler--hidden {
+    cursor: pointer;
+}
+
+.spoiler-text {
+    border-radius: 3px;
+}
+
+.spoiler--hidden .spoiler-text {
+    color: rgba(0, 0, 0, 0);
+}
+
+.spoiler--hidden .spoiler-text::selection {
+    color: rgba(0, 0, 0, 0);
+}
+
+.spoiler-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: 3px;
+}
+
+.spoiler--hidden .spoiler-image {
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.spoiler--hidden .spoiler-image img {
+    filter: blur(44px);
+}
+
+.spoiler--hidden .spoiler-image:after {
+    content: "SPOILER";
+    color: #dcddde;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 600;
+    padding: 0.5em 0.7em;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    font-size: 0.9em;
+}
+
+.spoiler--hidden:hover .spoiler-image:after {
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.quote {
+    margin: 0.1em 0;
+    padding-left: 0.6em;
+    border-left: 4px solid;
+    border-radius: 3px;
+}
+
+.pre {
+    font-family: "Consolas", "Courier New", Courier, monospace;
+}
+
+.pre--multiline {
+    margin-top: 0.25em;
+    padding: 0.5em;
+    border: 2px solid;
+    border-radius: 5px;
+}
+
+.pre--inline {
+    padding: 2px;
+    border-radius: 3px;
+    font-size: 0.85em;
+}
+
+.mention {
+    border-radius: 3px;
+    padding: 0 2px;
+    color: #7289da;
+    background: rgba(114, 137, 218, .1);
+    font-weight: 500;
+}
+
+.emoji {
+    width: 1.25em;
+    height: 1.25em;
+    margin: 0 0.06em;
+    vertical-align: -0.4em;
+}
+
+.emoji--small {
+    width: 1em;
+    height: 1em;
+}
+
+.emoji--large {
+    width: 2.8em;
+    height: 2.8em;
+}
+
+/* Preamble */
+
+.preamble {
+    display: grid;
+    margin: 0 0.3em 0.6em 0.3em;
+    max-width: 100%;
+    grid-template-columns: auto 1fr;
+}
+
+.preamble__guild-icon-container {
+    grid-column: 1;
+}
+
+.preamble__guild-icon {
+    max-width: 88px;
+    max-height: 88px;
+}
+
+.preamble__entries-container {
+    grid-column: 2;
+    margin-left: 0.6em;
+}
+
+.preamble__entry {
+    font-size: 1.4em;
+}
+
+.preamble__entry--small {
+    font-size: 1em;
+}
+
+/* Chatlog */
+
+.chatlog {
+    max-width: 100%;
+}
+
+.chatlog__message-group {
+    display: grid;
+    margin: 0 0.6em;
+    padding: 0.9em 0;
+    border-top: 1px solid;
+    grid-template-columns: auto 1fr;
+}
+
+.chatlog__author-avatar-container {
+    grid-column: 1;
+    width: 40px;
+    height: 40px;
+}
+
+.chatlog__author-avatar {
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+}
+
+.chatlog__messages {
+    grid-column: 2;
+    margin-left: 1.2em;
+    min-width: 50%;
+}
+
+.chatlog__author-name {
+    font-weight: 500;
+}
+
+.chatlog__timestamp {
+    margin-left: 0.3em;
+    font-size: 0.75em;
+}
+
+.chatlog__message {
+    padding: 0.1em 0.3em;
+    margin: 0 -0.3em;
+    background-color: transparent;
+    transition: background-color 1s ease;
+}
+
+.chatlog__content {
+    font-size: 0.95em;
+    word-wrap: break-word;
+}
+
+.chatlog__edited-timestamp {
+    margin-left: 0.15em;
+    font-size: 0.8em;
+}
+
+.chatlog__attachment {
+    margin-top: 0.3em;
+}
+
+.chatlog__attachment-thumbnail {
+    vertical-align: top;
+    max-width: 45vw;
+    max-height: 500px;
+    border-radius: 3px;
+}
+
+.chatlog__embed {
+    display: flex;
+    margin-top: 0.3em;
+    max-width: 520px;
+}
+
+.chatlog__embed-color-pill {
+    flex-shrink: 0;
+    width: 0.25em;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.chatlog__embed-content-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5em 0.6em;
+    border: 1px solid;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.chatlog__embed-content {
+    display: flex;
+    width: 100%;
+}
+
+.chatlog__embed-text {
+    flex: 1;
+}
+
+.chatlog__embed-author {
+    display: flex;
+    margin-bottom: 0.3em;
+    align-items: center;
+}
+
+.chatlog__embed-author-icon {
+    margin-right: 0.5em;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.chatlog__embed-author-name {
+    font-size: 0.875em;
+    font-weight: 600;
+}
+
+.chatlog__embed-title {
+    margin-bottom: 0.2em;
+    font-size: 0.875em;
+    font-weight: 600;
+}
+
+.chatlog__embed-description {
+    font-weight: 500;
+    font-size: 0.85em;
+}
+
+.chatlog__embed-fields {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.chatlog__embed-field {
+    flex: 0;
+    min-width: 100%;
+    max-width: 506px;
+    padding-top: 0.6em;
+    font-size: 0.875em;
+}
+
+.chatlog__embed-field--inline {
+    flex: 1;
+    flex-basis: auto;
+    min-width: 150px;
+}
+
+.chatlog__embed-field-name {
+    margin-bottom: 0.2em;
+    font-weight: 600;
+}
+
+.chatlog__embed-field-value {
+    font-weight: 500;
+}
+
+.chatlog__embed-thumbnail {
+    flex: 0;
+    margin-left: 1.2em;
+    max-width: 80px;
+    max-height: 80px;
+    border-radius: 3px;
+}
+
+.chatlog__embed-image-container {
+    margin-top: 0.6em;
+}
+
+.chatlog__embed-image {
+    max-width: 500px;
+    max-height: 400px;
+    border-radius: 3px;
+}
+
+.chatlog__embed-footer {
+    margin-top: 0.6em;
+}
+
+.chatlog__embed-footer-icon {
+    margin-right: 0.2em;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+.chatlog__embed-footer-text {
+    font-size: 0.75em;
+    font-weight: 500;
+}
+
+.chatlog__reactions {
+    display: flex;
+}
+
+.chatlog__reaction {
+    display: flex;
+    align-items: center;
+    margin: 0.35em 0.1em 0.1em 0.1em;
+    padding: 0.2em 0.35em;
+    border-radius: 3px;
+}
+
+.chatlog__reaction-count {
+    min-width: 9px;
+    margin-left: 0.35em;
+    font-size: 0.875em;
+}
+
+.chatlog__bot-tag {
+    position: relative;
+    top: -.2em;
+    margin-left: 0.3em;
+    padding: 0.05em 0.3em;
+    border-radius: 3px;
+    vertical-align: middle;
+    line-height: 1.3;
+    background: #7289da;
+    color: #ffffff;
+    font-size: 0.625em;
+    font-weight: 500;
+}
+
+/* Postamble */
+
+.postamble {
+    margin: 1.4em 0.3em 0.6em 0.3em;
+    padding: 1em;
+    border-top: 1px solid;
+}
+    </style>
+    <style>
+        /* General */
+
+body {
+    background-color: #36393e;
+    color: #dcddde;
+}
+
+a {
+    color: #0096cf;
+}
+
+.spoiler-text {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.spoiler--hidden .spoiler-text {
+    background-color: #202225;
+}
+
+.spoiler--hidden:hover .spoiler-text {
+    background-color: rgba(32, 34, 37, 0.8);
+}
+
+.quote {
+    border-color: #4f545c;
+}
+
+.pre {
+    background-color: #2f3136 !important;
+}
+
+.pre--multiline {
+    border-color: #282b30 !important;
+    color: #b9bbbe !important;
+}
+
+/* === Preamble === */
+
+.preamble__entry {
+    color: #ffffff;
+}
+
+/* Chatlog */
+
+.chatlog__message-group {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.chatlog__author-name {
+    color: #ffffff;
+}
+
+.chatlog__timestamp {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.chatlog__message--highlighted {
+    background-color: rgba(114, 137, 218, 0.2) !important;
+}
+
+.chatlog__message--pinned {
+    background-color: rgba(249, 168, 37, 0.05);
+}
+
+.chatlog__edited-timestamp {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.chatlog__embed-color-pill--default {
+    background-color: rgba(79, 84, 92, 1);
+}
+
+.chatlog__embed-content-container {
+    background-color: rgba(46, 48, 54, 0.3);
+    border-color: rgba(46, 48, 54, 0.6);
+}
+
+.chatlog__embed-author-name {
+    color: #ffffff;
+}
+
+.chatlog__embed-author-name-link {
+    color: #ffffff;
+}
+
+.chatlog__embed-title {
+    color: #ffffff;
+}
+
+.chatlog__embed-description {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chatlog__embed-field-name {
+    color: #ffffff;
+}
+
+.chatlog__embed-field-value {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chatlog__embed-footer {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chatlog__reaction {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.chatlog__reaction-count {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Postamble */
+
+.postamble {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.postamble__entry {
+    color: #ffffff;
+}
+    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.pre--multiline').forEach(block => hljs.highlightBlock(block));
+        });
+    </script>
+
+    <script>
+        function scrollToMessage(event, id) {
+            var element = document.getElementById('message-' + id);
+
+            if (element) {
+                event.preventDefault();
+
+                element.classList.add('chatlog__message--highlighted');
+
+                window.scrollTo({
+                    top: element.getBoundingClientRect().top - document.body.getBoundingClientRect().top - (window.innerHeight / 2),
+                    behavior: 'smooth'
+                });
+
+                window.setTimeout(function() {
+                    element.classList.remove('chatlog__message--highlighted');
+                }, 2000);
+            }
+        }
+
+        function showSpoiler(event, element) {
+            if (element && element.classList.contains('spoiler--hidden')) {
+                event.preventDefault();
+                element.classList.remove('spoiler--hidden');
+            }
+        }
+    </script>
+</head>
+<body>
+
+<div class="preamble">
+    <div class="preamble__guild-icon-container">
+        <img class="preamble__guild-icon" src="https://cdn.discordapp.com/icons/793203674625212466/ce7ac2e697f072189575a2bb751f2d86.png" alt="Guild icon">
+    </div>
+    <div class="preamble__entries-container">
+        <div class="preamble__entry">GGROUPS Private Channel by piOS</div>
+        <div class="preamble__entry">Chit Chat / long-ass-venting</div>
+
+
+    </div>
+</div>
+
+<div class="chatlog">
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/252476454267387905/380a5478bac7e6b40bdbf1bf4cc59db5.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ramen#4608" data-user-id="252476454267387905" style="color: rgb(155,89,182)">Ramen</span>
+
+
+        <span class="chatlog__timestamp">11-Mar-21 10:17 PM</span>
+
+            <div class="chatlog__message " data-message-id="819771106394112041" id="message-819771106394112041">
+                <div class="chatlog__content">
+                    <div class="markdown">Okay so venting time </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819771137890189332" id="message-819771137890189332">
+                <div class="chatlog__content">
+                    <div class="markdown">And existential crisis </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819771165920198696" id="message-819771165920198696">
+                <div class="chatlog__content">
+                    <div class="markdown">And philosophy </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819771222967451663" id="message-819771222967451663">
+                <div class="chatlog__content">
+                    <div class="markdown">More or less just typing my thoughts because I hate being alone </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819771249772855337" id="message-819771249772855337">
+                <div class="chatlog__content">
+                    <div class="markdown">And I hate being with people </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819771266600140802" id="message-819771266600140802">
+                <div class="chatlog__content">
+                    <div class="markdown">I&#39;m weird like that </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819771384078794753" id="message-819771384078794753">
+                <div class="chatlog__content">
+                    <div class="markdown">I&#39;ve been afraid of death for a long time </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819771423496863794" id="message-819771423496863794">
+                <div class="chatlog__content">
+                    <div class="markdown">Existential crisis </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819771488642007070" id="message-819771488642007070">
+                <div class="chatlog__content">
+                    <div class="markdown">For even longer I&#39;ve contemplated the very meaning of what the universe is and what it&#39;s for </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819771596176752708" id="message-819771596176752708">
+                <div class="chatlog__content">
+                    <div class="markdown">I&#39;ve half concluded that it&#39;s just a random amount events that ended up with humans having consciousness </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819771650031353916" id="message-819771650031353916">
+                <div class="chatlog__content">
+                    <div class="markdown">People who were conscious had longer lifespans, they knew how to actually think </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819771694914863164" id="message-819771694914863164">
+                <div class="chatlog__content">
+                    <div class="markdown">We evolved like that I guess </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819771748492902440" id="message-819771748492902440">
+                <div class="chatlog__content">
+                    <div class="markdown">(Note: No offense is meant to any religion) </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819771860165984276" id="message-819771860165984276">
+                <div class="chatlog__content">
+                    <div class="markdown">(This gets kinda icky, assume for the rest that this is not meant to offend anybody) </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819772105401958430" id="message-819772105401958430">
+                <div class="chatlog__content">
+                    <div class="markdown">I think that at some point life just kinda happened, and it happened so well that it just kept happening, from single cells to full on creatures, just bugs and stuff </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819772147530334229" id="message-819772147530334229">
+                <div class="chatlog__content">
+                    <div class="markdown">Here I am explaining popular pre-historical theories </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819772222859903006" id="message-819772222859903006">
+                <div class="chatlog__content">
+                    <div class="markdown">This is mostly accepted as fact among the scientific community so let&#39;s move on </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819772280095375410" id="message-819772280095375410">
+                <div class="chatlog__content">
+                    <div class="markdown">Humans are cursed with the knowledge of death </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819772350156374027" id="message-819772350156374027">
+                <div class="chatlog__content">
+                    <div class="markdown">The knowledge that we all eventually disappear into the void of nothingness after we are fatally damaged </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819772375725768784" id="message-819772375725768784">
+                <div class="chatlog__content">
+                    <div class="markdown">There are many philosophical theories out there </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819772414867013642" id="message-819772414867013642">
+                <div class="chatlog__content">
+                    <div class="markdown">One of the most basic and juvenile is Solipsism </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819772485104828446" id="message-819772485104828446">
+                <div class="chatlog__content">
+                    <div class="markdown">Solipsism is the idea that the entire universe stems from your mind </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819772515756671017" id="message-819772515756671017">
+                <div class="chatlog__content">
+                    <div class="markdown">Basically, it&#39;s all in your head </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819772563852099595" id="message-819772563852099595">
+                <div class="chatlog__content">
+                    <div class="markdown">Occam&#39;s Razor cuts this out pretty quickly </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819772614238273537" id="message-819772614238273537">
+                <div class="chatlog__content">
+                    <div class="markdown">Occam&#39;s Razor states that if it is unlikely, it is probably not true </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819772637122527303" id="message-819772637122527303">
+                <div class="chatlog__content">
+                    <div class="markdown">A very simple yet effective rule </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819772692655243344" id="message-819772692655243344">
+                <div class="chatlog__content">
+                    <div class="markdown">So I say that solipsism is ridiculous though honestly still worth a bit of thought </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819772940706644029" id="message-819772940706644029">
+                <div class="chatlog__content">
+                    <div class="markdown">Next I would like to cover the simulation theory, which, spoiler, is also cut by occam&#39;s </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819772985531039786" id="message-819772985531039786">
+                <div class="chatlog__content">
+                    <div class="markdown">Basically The Matrix~ </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819773089276887070" id="message-819773089276887070">
+                <div class="chatlog__content">
+                    <div class="markdown">The theory that earth is actually a simulation on future or other worldly simulation technology and that we are all in a computer program </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819773176715280424" id="message-819773176715280424">
+                <div class="chatlog__content">
+                    <div class="markdown">However this is highly unlikely due to the lack of bugs or crashes that all technology tends to have, no matter how advanced the program is </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819773231782297641" id="message-819773231782297641">
+                <div class="chatlog__content">
+                    <div class="markdown">How wouldn&#39;t the program have broken by now? </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819773383012384829" id="message-819773383012384829">
+                <div class="chatlog__content">
+                    <div class="markdown">How hasn&#39;t anybody found an exploit? Physics has been perfect, and the amount of thought programmers or aliens would have to put in for all the ideas humanity has is simply impossible </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819773480303198228" id="message-819773480303198228">
+                <div class="chatlog__content">
+                    <div class="markdown">Really the most popular theory is just... The most likely </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819773517335625730" id="message-819773517335625730">
+                <div class="chatlog__content">
+                    <div class="markdown">The universe is exactly as it seems </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819773618409570304" id="message-819773618409570304">
+                <div class="chatlog__content">
+                    <div class="markdown">Some things we think are impossible are possible and just haven&#39;t been discovered, but for the most part, completely on the surface </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819773698168848394" id="message-819773698168848394">
+                <div class="chatlog__content">
+                    <div class="markdown">We were created because we were, and when we die we&#39;re dead, plain and simple </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819773722911178763" id="message-819773722911178763">
+                <div class="chatlog__content">
+                    <div class="markdown">And honestly that&#39;s what I believe </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819773761649639484" id="message-819773761649639484">
+                <div class="chatlog__content">
+                    <div class="markdown">I don&#39;t believe in religion~ I&#39;ve made that clear </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819773856574734366" id="message-819773856574734366">
+                <div class="chatlog__content">
+                    <div class="markdown">Though I respect ideals and beliefs, it&#39;s okay for you to have a religion, I just don&#39;t personally find it true </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819773913617530890" id="message-819773913617530890">
+                <div class="chatlog__content">
+                    <div class="markdown">I think that when we die, we can&#39;t even comprehend it </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819773991140720641" id="message-819773991140720641">
+                <div class="chatlog__content">
+                    <div class="markdown">A fate of death is one we all face, and yet, it is absolutely horrifying </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774050116567050" id="message-819774050116567050">
+                <div class="chatlog__content">
+                    <div class="markdown">We all learn about it when we&#39;re little, but it&#39;s not until we&#39;re older that it&#39;s so unsettling </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774170509869066" id="message-819774170509869066">
+                <div class="chatlog__content">
+                    <div class="markdown">It&#39;s so unsettling that when a person dies, which is more than once every millisecond which is also insane, that their consciousness, if you don&#39;t believe in religion, is completely gone </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774181771706378" id="message-819774181771706378">
+                <div class="chatlog__content">
+                    <div class="markdown">Just gone </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774199995695124" id="message-819774199995695124">
+                <div class="chatlog__content">
+                    <div class="markdown">Experiencing less than nothing </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774225904041995" id="message-819774225904041995">
+                <div class="chatlog__content">
+                    <div class="markdown">Less than black; blindness </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774248829714433" id="message-819774248829714433">
+                <div class="chatlog__content">
+                    <div class="markdown">Less than touch; the lack of it </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774272028672020" id="message-819774272028672020">
+                <div class="chatlog__content">
+                    <div class="markdown">You cannot feel your dead body </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774371898982451" id="message-819774371898982451">
+                <div class="chatlog__content">
+                    <div class="markdown">You will not experience time; there is no brain left to do so </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774474236067840" id="message-819774474236067840">
+                <div class="chatlog__content">
+                    <div class="markdown">Perpetually and forever asleep and &#39;fast forwarding time&#39; like what happens when you are sleeping or under drugs in the hospital, but you never come back </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774529832091674" id="message-819774529832091674">
+                <div class="chatlog__content">
+                    <div class="markdown">Which is impossible to think about since we always have come back; Always instantly </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774605664452618" id="message-819774605664452618">
+                <div class="chatlog__content">
+                    <div class="markdown">The world goes on in both forever and an instant at the same time for you as your consciousness is put to rest </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774744176885823" id="message-819774744176885823">
+                <div class="chatlog__content">
+                    <div class="markdown">You cannot taste, you cannot see, you cannot feel, you cannot hear, you cannot sense any heat at all, you cannot feel any draft in the room </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774753350746142" id="message-819774753350746142">
+                <div class="chatlog__content">
+                    <div class="markdown">You feel nothing </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774783583158302" id="message-819774783583158302">
+                <div class="chatlog__content">
+                    <div class="markdown">Sounds easy enough, but it&#39;s not <span class="chatlog__edited-timestamp" title="11-Mar-21 10:32 PM">(edited)</span></div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774866173460500" id="message-819774866173460500">
+                <div class="chatlog__content">
+                    <div class="markdown">Blind people describe being blind as less than black; The same holds true for what it is when you die </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774876050915418" id="message-819774876050915418">
+                <div class="chatlog__content">
+                    <div class="markdown">Less than nothing </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774886691340289" id="message-819774886691340289">
+                <div class="chatlog__content">
+                    <div class="markdown">Less than anything </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774927644786720" id="message-819774927644786720">
+                <div class="chatlog__content">
+                    <div class="markdown">You experience the true void </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819774972200615968" id="message-819774972200615968">
+                <div class="chatlog__content">
+                    <div class="markdown">Which utterly makes me feel horrified </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775002000883732" id="message-819775002000883732">
+                <div class="chatlog__content">
+                    <div class="markdown">I waste my time with the bullshit of daily life </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775077125980202" id="message-819775077125980202">
+                <div class="chatlog__content">
+                    <div class="markdown">I only have a limited time on earth which is probably a human construct anyway </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775118023589929" id="message-819775118023589929">
+                <div class="chatlog__content">
+                    <div class="markdown">And I&#39;m wasting my limited time with school? </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775126316646431" id="message-819775126316646431">
+                <div class="chatlog__content">
+                    <div class="markdown">With pain? </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775141689032736" id="message-819775141689032736">
+                <div class="chatlog__content">
+                    <div class="markdown">Why? </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775200445988884" id="message-819775200445988884">
+                <div class="chatlog__content">
+                    <div class="markdown">Because almost everybody&#39;s an asshole </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775249075535873" id="message-819775249075535873">
+                <div class="chatlog__content">
+                    <div class="markdown">If everyone was nice, then we could just </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775266641149984" id="message-819775266641149984">
+                <div class="chatlog__content">
+                    <div class="markdown">Give each other what we need </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775282454069303" id="message-819775282454069303">
+                <div class="chatlog__content">
+                    <div class="markdown">And get what we want </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775347842482196" id="message-819775347842482196">
+                <div class="chatlog__content">
+                    <div class="markdown">Of course that&#39;s impossibly unrealistic </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775404814237747" id="message-819775404814237747">
+                <div class="chatlog__content">
+                    <div class="markdown">I would like the idea of christianity, though I don&#39;t believe in it </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775420311666728" id="message-819775420311666728">
+                <div class="chatlog__content">
+                    <div class="markdown">I really want to. </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775432936914954" id="message-819775432936914954">
+                <div class="chatlog__content">
+                    <div class="markdown">I would love to. </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775486426349579" id="message-819775486426349579">
+                <div class="chatlog__content">
+                    <div class="markdown">But unfortunately, all I see when I think about it is the end, and not an afterlife. </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775561823027251" id="message-819775561823027251">
+                <div class="chatlog__content">
+                    <div class="markdown">Heaven would be nice, hell would be aweful, just as good and bad people deserve... But... </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775609697861643" id="message-819775609697861643">
+                <div class="chatlog__content">
+                    <div class="markdown">Heaven would get old, nothings fun if you have it forever </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775641171918868" id="message-819775641171918868">
+                <div class="chatlog__content">
+                    <div class="markdown">Vacations are only special because you have to leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775693202128936" id="message-819775693202128936">
+                <div class="chatlog__content">
+                    <div class="markdown">If you spent your life in a tiny ass hotel room you&#39;d hate it </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775751050100767" id="message-819775751050100767">
+                <div class="chatlog__content">
+                    <div class="markdown">But going for a weekend feels nice to have somebody else make your bed for a change </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775819609014282" id="message-819775819609014282">
+                <div class="chatlog__content">
+                    <div class="markdown">But, not only does heaven suck after a few billions years of human time </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775837443588146" id="message-819775837443588146">
+                <div class="chatlog__content">
+                    <div class="markdown">Hell you&#39;d get used to </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775894268149772" id="message-819775894268149772">
+                <div class="chatlog__content">
+                    <div class="markdown">If you&#39;re always tortured then you&#39;d have a fucking pain tolerence </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775926044459018" id="message-819775926044459018">
+                <div class="chatlog__content">
+                    <div class="markdown">If you have pain you get used to things </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775966565498881" id="message-819775966565498881">
+                <div class="chatlog__content">
+                    <div class="markdown">No matter how much they crush you and shit, </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819775999829999628" id="message-819775999829999628">
+                <div class="chatlog__content">
+                    <div class="markdown">At some point you&#39;re completely broken </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819776029354229760" id="message-819776029354229760">
+                <div class="chatlog__content">
+                    <div class="markdown">Why do the movies have everyone screaming in hell </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819776050951225374" id="message-819776050951225374">
+                <div class="chatlog__content">
+                    <div class="markdown">You would be broken. </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819776084765573130" id="message-819776084765573130">
+                <div class="chatlog__content">
+                    <div class="markdown">At some point, it stops sucking </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819776114648940584" id="message-819776114648940584">
+                <div class="chatlog__content">
+                    <div class="markdown">It&#39;s just the shit day every day </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819776128327745548" id="message-819776128327745548">
+                <div class="chatlog__content">
+                    <div class="markdown">And that breaks a person </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819776167019282432" id="message-819776167019282432">
+                <div class="chatlog__content">
+                    <div class="markdown">But after being broken for so long you feel nothing </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819776205297418270" id="message-819776205297418270">
+                <div class="chatlog__content">
+                    <div class="markdown">So noone&#39;s tortured and noone&#39;s rewarded </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819776316969713674" id="message-819776316969713674">
+                <div class="chatlog__content">
+                    <div class="markdown">So, no offense, but even if god and heaven and hell is real, then it all sucks anyway </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819776413162799115" id="message-819776413162799115">
+                <div class="chatlog__content">
+                    <div class="markdown">Unless I&#39;m criminally undereducated in which case I&#39;m extremely sorry </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819776462085292082" id="message-819776462085292082">
+                <div class="chatlog__content">
+                    <div class="markdown">So... What about buddhism </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819776489867837461" id="message-819776489867837461">
+                <div class="chatlog__content">
+                    <div class="markdown">And specifically again, their afterlife </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819776657870159923" id="message-819776657870159923">
+                <div class="chatlog__content">
+                    <div class="markdown">Well, how exactly would your brain&#39;s consciousness, something we&#39;ve known to be a physical attribute of your brain that we kind of know how it works, it&#39;s clearly not like some flash drive you can just remove and stick in another meat suit </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819776805619367946" id="message-819776805619367946">
+                <div class="chatlog__content">
+                    <div class="markdown">So... Honestly, no offense really anyone who believes in reincarnation, but that&#39;s kinda faulty at best </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777050298679358" id="message-819777050298679358">
+                <div class="chatlog__content">
+                    <div class="markdown">And those three are the main ideas of death and they all kinda suck </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777109836431360" id="message-819777109836431360">
+                <div class="chatlog__content">
+                    <div class="markdown">Either &#39;cause they make no sense or, even if they could somehow happen, they still suck to be in </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777153167917066" id="message-819777153167917066">
+                <div class="chatlog__content">
+                    <div class="markdown">I&#39;m so so sorry for the hundreds I know I&#39;ve just offended </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777248131416074" id="message-819777248131416074">
+                <div class="chatlog__content">
+                    <div class="markdown">But I mean especially with the christianity model, it sounds nice </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777275665973268" id="message-819777275665973268">
+                <div class="chatlog__content">
+                    <div class="markdown">unlimited everything whenever you want </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777310088888358" id="message-819777310088888358">
+                <div class="chatlog__content">
+                    <div class="markdown">But it&#39;s the same as torture </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777350014337044" id="message-819777350014337044">
+                <div class="chatlog__content">
+                    <div class="markdown">If you always get what you want, nothing&#39;s special </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777430104703036" id="message-819777430104703036">
+                <div class="chatlog__content">
+                    <div class="markdown">Yet it&#39;s also scary as hell to be a dead hull of nothingness in the void of time and space </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777577115058188" id="message-819777577115058188">
+                <div class="chatlog__content">
+                    <div class="markdown">Why won&#39;t th voices stop </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777594215890965" id="message-819777594215890965">
+                <div class="chatlog__content">
+                    <div class="markdown">Why won&#39;t the voices stop </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777617342234637" id="message-819777617342234637">
+                <div class="chatlog__content">
+                    <div class="markdown">Why won&#39;t the voices stop </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777633331970109" id="message-819777633331970109">
+                <div class="chatlog__content">
+                    <div class="markdown">Why won&#39;t the voices stop </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777650809503794" id="message-819777650809503794">
+                <div class="chatlog__content">
+                    <div class="markdown">Why won&#39;t the voices stop </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777672157593610" id="message-819777672157593610">
+                <div class="chatlog__content">
+                    <div class="markdown">Why won&#39;t they let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777680454844437" id="message-819777680454844437">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777691213103115" id="message-819777691213103115">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777696585482281" id="message-819777696585482281">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777703582236704" id="message-819777703582236704">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777711575924807" id="message-819777711575924807">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777721081004072" id="message-819777721081004072">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777730278195251" id="message-819777730278195251">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777739393335316" id="message-819777739393335316">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777746342510663" id="message-819777746342510663">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777755641413642" id="message-819777755641413642">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777760431046658" id="message-819777760431046658">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777768879292417" id="message-819777768879292417">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777777019650068" id="message-819777777019650068">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777784598888488" id="message-819777784598888488">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777793843265576" id="message-819777793843265576">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777804786466816" id="message-819777804786466816">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777817964839042" id="message-819777817964839042">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777828265525278" id="message-819777828265525278">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777836722028554" id="message-819777836722028554">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777845823406091" id="message-819777845823406091">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777855428886558" id="message-819777855428886558">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777865808609330" id="message-819777865808609330">
+                <div class="chatlog__content">
+                    <div class="markdown">let me leave </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777934339604530" id="message-819777934339604530">
+                <div class="chatlog__content">
+                    <div class="markdown">They don&#39;t stop screaming </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777945446776874" id="message-819777945446776874">
+                <div class="chatlog__content">
+                    <div class="markdown">I don&#39;t know what to do </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819777970255560765" id="message-819777970255560765">
+                <div class="chatlog__content">
+                    <div class="markdown">No amount of therapy can fix me </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778000127393802" id="message-819778000127393802">
+                <div class="chatlog__content">
+                    <div class="markdown">Therapists are overpaid assholes </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778095988473867" id="message-819778095988473867">
+                <div class="chatlog__content">
+                    <div class="markdown">This metaphysical bullshit can&#39;t be explained away unless you just put me on a shit ton of drugs </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778162535038996" id="message-819778162535038996">
+                <div class="chatlog__content">
+                    <div class="markdown">I can be having fun </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778184299282463" id="message-819778184299282463">
+                <div class="chatlog__content">
+                    <div class="markdown">I can be miserable </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778208655998986" id="message-819778208655998986">
+                <div class="chatlog__content">
+                    <div class="markdown">And yet I still can&#39;t stop </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778217022849075" id="message-819778217022849075">
+                <div class="chatlog__content">
+                    <div class="markdown">I&#39;m going to die. </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778233599262721" id="message-819778233599262721">
+                <div class="chatlog__content">
+                    <div class="markdown">I&#39;m going to suffer forever </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778259582976061" id="message-819778259582976061">
+                <div class="chatlog__content">
+                    <div class="markdown">That&#39;s the only thing I can do while here </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778297989693460" id="message-819778297989693460">
+                <div class="chatlog__content">
+                    <div class="markdown">Because even when I&#39;m enjoying myself I&#39;m suffering </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778337269350460" id="message-819778337269350460">
+                <div class="chatlog__content">
+                    <div class="markdown">Because I think about how we&#39;re only here to suffer </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778363170095124" id="message-819778363170095124">
+                <div class="chatlog__content">
+                    <div class="markdown">It doesn&#39;t matter WHY we&#39;re here </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778391334846484" id="message-819778391334846484">
+                <div class="chatlog__content">
+                    <div class="markdown">Because all we do here is suffer and reproduce </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778487514431538" id="message-819778487514431538">
+                <div class="chatlog__content">
+                    <div class="markdown">I put on a smile for them </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778505894002689" id="message-819778505894002689">
+                <div class="chatlog__content">
+                    <div class="markdown">Act like I like it </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778611615629374" id="message-819778611615629374">
+                <div class="chatlog__content">
+                    <div class="markdown">But the darkness inside won&#39;t stop screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming and screaming </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778673846386718" id="message-819778673846386718">
+                <div class="chatlog__content">
+                    <div class="markdown">I&#39;m a fucking psychopath too </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778724551327784" id="message-819778724551327784">
+                <div class="chatlog__content">
+                    <div class="markdown">I&#39;m staring at the ground, walking past people in the hallway </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778790884245514" id="message-819778790884245514">
+                <div class="chatlog__content">
+                    <div class="markdown">No matter how depressed I am, I always am able to perfectly replicate human happiness emotion </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778816712769547" id="message-819778816712769547">
+                <div class="chatlog__content">
+                    <div class="markdown">I always sound good for them </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778888343224320" id="message-819778888343224320">
+                <div class="chatlog__content">
+                    <div class="markdown">It&#39;s always small talk, but I sound okay </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778919753449555" id="message-819778919753449555">
+                <div class="chatlog__content">
+                    <div class="markdown">The voice doesn&#39;t match the person </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819778982504824863" id="message-819778982504824863">
+                <div class="chatlog__content">
+                    <div class="markdown">It&#39;s a psychopathic replication of human emotion </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779044794564628" id="message-819779044794564628">
+                <div class="chatlog__content">
+                    <div class="markdown">I am only a husk, a shell, for a brain and a meatsuit </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779080194883594" id="message-819779080194883594">
+                <div class="chatlog__content">
+                    <div class="markdown">And all I&#39;m here to do is suffer </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779100180217926" id="message-819779100180217926">
+                <div class="chatlog__content">
+                    <div class="markdown">How&#39;s that for a vent, huh? </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779130975191081" id="message-819779130975191081">
+                <div class="chatlog__content">
+                    <div class="markdown">This is why I&#39;m here, specifically </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779154127749131" id="message-819779154127749131">
+                <div class="chatlog__content">
+                    <div class="markdown">In this discord channel </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779172288954378" id="message-819779172288954378">
+                <div class="chatlog__content">
+                    <div class="markdown">I can&#39;t stop hearing the voices </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779186717229056" id="message-819779186717229056">
+                <div class="chatlog__content">
+                    <div class="markdown">It&#39;s too late. </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779238696976395" id="message-819779238696976395">
+                <div class="chatlog__content">
+                    <div class="markdown">I used to have moments where they let up~ where I could distract from it </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779259639791657" id="message-819779259639791657">
+                <div class="chatlog__content">
+                    <div class="markdown">But it&#39;s too late anymore </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779281801969675" id="message-819779281801969675">
+                <div class="chatlog__content">
+                    <div class="markdown">Now it&#39;s all I hear </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779339615993896" id="message-819779339615993896">
+                <div class="chatlog__content">
+                    <div class="markdown">Sure I hear my internal monologue and songs that get stuck in my head </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779361116913724" id="message-819779361116913724">
+                <div class="chatlog__content">
+                    <div class="markdown">But it&#39;s always there as well </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779366011535380" id="message-819779366011535380">
+                <div class="chatlog__content">
+                    <div class="markdown">Always </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779380632354816" id="message-819779380632354816">
+                <div class="chatlog__content">
+                    <div class="markdown">Always on my mind </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779414261760020" id="message-819779414261760020">
+                <div class="chatlog__content">
+                    <div class="markdown">Always thinking about how I&#39;m only here to suffer </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779441437573140" id="message-819779441437573140">
+                <div class="chatlog__content">
+                    <div class="markdown">And yet I stick to the rules and give a damn </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779471313600533" id="message-819779471313600533">
+                <div class="chatlog__content">
+                    <div class="markdown">Because my human fear overtakes my brain </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779611851227167" id="message-819779611851227167">
+                <div class="chatlog__content">
+                    <div class="markdown">The most basic psychological principal of reward and punishment works on me </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779671528439808" id="message-819779671528439808">
+                <div class="chatlog__content">
+                    <div class="markdown">If I&#39;m punished for an action I&#39;m fearful of it </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779690796679219" id="message-819779690796679219">
+                <div class="chatlog__content">
+                    <div class="markdown">Like a fucking monkey </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779725735362630" id="message-819779725735362630">
+                <div class="chatlog__content">
+                    <div class="markdown">That&#39;s why I follow the rules and stick to the code </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779747012673607" id="message-819779747012673607">
+                <div class="chatlog__content">
+                    <div class="markdown">It&#39;s not a choice... It&#39;s primal </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779766605316116" id="message-819779766605316116">
+                <div class="chatlog__content">
+                    <div class="markdown">I&#39;m being forced into it </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779842475032606" id="message-819779842475032606">
+                <div class="chatlog__content">
+                    <div class="markdown">No matter how far my consciousness rises above and realizes the bullshit we&#39;re here for </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779861383741450" id="message-819779861383741450">
+                <div class="chatlog__content">
+                    <div class="markdown">No matter how much I see </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819779936201998348" id="message-819779936201998348">
+                <div class="chatlog__content">
+                    <div class="markdown">Maybe this is all a simulation. </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819780001561706507" id="message-819780001561706507">
+                <div class="chatlog__content">
+                    <div class="markdown">I can do a little bit but no matter what the player takes over again </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819780039171768340" id="message-819780039171768340">
+                <div class="chatlog__content">
+                    <div class="markdown">Makes me play the game right </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819780117185822750" id="message-819780117185822750">
+                <div class="chatlog__content">
+                    <div class="markdown">Or the game&#39;s not equipped to handle going too far off the story beats </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819780178841567242" id="message-819780178841567242">
+                <div class="chatlog__content">
+                    <div class="markdown">But that&#39;s still a bad theory of the universe and I don&#39;t accept it. </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819780299055038477" id="message-819780299055038477">
+                <div class="chatlog__content">
+                    <div class="markdown">All I know is that this is pain and my brain is just fearful enough to continue doing the things that cause me slightly less pain than breaking the rules </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819780468333215754" id="message-819780468333215754">
+                <div class="chatlog__content">
+                    <div class="markdown">Could it be the presence of memory is all we are and all that we&#39;ll ever be </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819780547177086986" id="message-819780547177086986">
+                <div class="chatlog__content">
+                    <div class="markdown">Don&#39;t get me started on what the brain is on a theoretical scale and what it means </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819780574637457468" id="message-819780574637457468">
+                <div class="chatlog__content">
+                    <div class="markdown">I&#39;m not equipped for it right now </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819780625653039144" id="message-819780625653039144">
+                <div class="chatlog__content">
+                    <div class="markdown">This mental state is clearly not okay and this is the mental state I am in constantly anymore </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819780736378077226" id="message-819780736378077226">
+                <div class="chatlog__content">
+                    <div class="markdown">Nobody IRL&#39;s cared to notice, and I&#39;m okay with that </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819780788072611851" id="message-819780788072611851">
+                <div class="chatlog__content">
+                    <div class="markdown">I&#39;ve never tried to make it obvious, I don&#39;t want to make it show </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819780817274011648" id="message-819780817274011648">
+                <div class="chatlog__content">
+                    <div class="markdown">Just put on a pretty show for the people </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819780830641651712" id="message-819780830641651712">
+                <div class="chatlog__content">
+                    <div class="markdown">For them. </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819780854820896779" id="message-819780854820896779">
+                <div class="chatlog__content">
+                    <div class="markdown">Just do it for them. </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819780975176712272" id="message-819780975176712272">
+                <div class="chatlog__content">
+                    <div class="markdown">My close friends know something&#39;s wrong but we never have time together </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819781008630218834" id="message-819781008630218834">
+                <div class="chatlog__content">
+                    <div class="markdown">Time is valuble, and we waste it in school </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819781044584054825" id="message-819781044584054825">
+                <div class="chatlog__content">
+                    <div class="markdown">We waste it in pain </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819781117837180928" id="message-819781117837180928">
+                <div class="chatlog__content">
+                    <div class="markdown">We waste it doing repetitive tasks that nobody wants to do </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819781158597427201" id="message-819781158597427201">
+                <div class="chatlog__content">
+                    <div class="markdown">No matter how you live, even, you can never be happy </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819781289073836032" id="message-819781289073836032">
+                <div class="chatlog__content">
+                    <div class="markdown">And I would lie and say that I&#39;m okay with that </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819781300704903181" id="message-819781300704903181">
+                <div class="chatlog__content">
+                    <div class="markdown">But I&#39;m not </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819781307394949140" id="message-819781307394949140">
+                <div class="chatlog__content">
+                    <div class="markdown">Never have been </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819781320032387072" id="message-819781320032387072">
+                <div class="chatlog__content">
+                    <div class="markdown">Never will </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819781342811127859" id="message-819781342811127859">
+                <div class="chatlog__content">
+                    <div class="markdown">The voices will never stop screaming </div>
+                </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="819781497459703820" id="message-819781497459703820">
+                <div class="chatlog__content">
+                    <div class="markdown">I&#39;m going to end it here because I&#39;ve typed enough so that if you scroll up all the way you&#39;re &#39;viewing old messages&#39; </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/252476454267387905/380a5478bac7e6b40bdbf1bf4cc59db5.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ramen#4608" data-user-id="252476454267387905" style="color: rgb(155,89,182)">Ramen</span>
+
+
+        <span class="chatlog__timestamp">12-Mar-21 12:14 PM</span>
+
+            <div class="chatlog__message " data-message-id="819981640561852426" id="message-819981640561852426">
+                <div class="chatlog__content">
+                    <div class="markdown">idk what the hell was wrong with me last night but this still holds true </div>
+                </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+</div>
+
+<div class="postamble">
+    <div class="postamble__entry">Exported 212 message(s)</div>
+</div>
+
+</body>
+</html>
